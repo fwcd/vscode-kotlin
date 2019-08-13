@@ -9,6 +9,7 @@ import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOpt
 import { LOG } from './logger';
 import { isOSUnixoid } from './osUtils';
 import { ServerDownloader } from './serverDownloader';
+import { fsExists, fsMkdir } from "./fsUtils";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -44,14 +45,17 @@ async function activateLanguageServer(context: vscode.ExtensionContext) {
     
     updateStatusMessage("Activating Kotlin Language Server...");
     
-    const resourcesDir = path.join(context.extensionPath, "resources")
+    if (!(await fsExists(context.globalStoragePath))) {
+        await fsMkdir(context.globalStoragePath);
+    }
     
     // Prepare language server
-    const langServerInstallDir = path.join(resourcesDir, "langServerInstall");
+    const langServerInstallDir = path.join(context.globalStoragePath, "langServerInstall");
     const langServerDownloader = new ServerDownloader("Kotlin Language Server", "kotlin-language-server", "server.zip", langServerInstallDir);
     try {
         await langServerDownloader.downloadServerIfNeeded(msg => updateStatusMessage(msg));
     } catch (error) {
+        console.error(error);
         vscode.window.showErrorMessage(`Could not download language server: ${error}`);
         cleanUp();
         return;
