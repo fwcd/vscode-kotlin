@@ -1,29 +1,31 @@
 {
     "name": "kotlin",
-    "displayName": "Kotlin",
-    "description": "Smart code completion, diagnostics, syntax highlighting and more for Kotlin",
+    "displayName": "Kotlin IDE",
+    "description": "Smart code completion, linting, debugging, syntax highlighting and more for Kotlin",
     "icon": "resources/Icon128.png",
     "repository": {
         "type": "git",
-        "url": "https://github.com/fwcd/KotlinLanguageServer.git"
+        "url": "https://github.com/fwcd/vscode-kotlin-ide.git"
     },
     "version": "0.2.4",
     "preview": true,
     "publisher": "fwcd",
     "license": "MIT",
     "categories": [
-        "Programming Languages"
+        "Programming Languages",
+        "Debuggers",
+        "Formatters",
+        "Linters"
     ],
     "keywords": [
-        "kotlin"
+        "kotlin",
+        "ide",
+        "debugger"
     ],
     "activationEvents": [
         "onLanguage:kotlin"
     ],
     "main": "./out/extension",
-    "files": [
-        "resources"
-    ],
     "contributes": {
         "languages": [
             {
