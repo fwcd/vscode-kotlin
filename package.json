@@ -96,7 +96,6 @@
     "scripts": {
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "prepare": "gulp downloadLanguageServer && gulp downloadGrammars",
         "postinstall": "node ./node_modules/vscode/bin/install",
         "packageextension": "vsce package",
         "test": "node ./node_modules/vscode/bin/test"
@@ -109,9 +108,6 @@
         "@types/mocha": "^5.2.3",
         "@types/node": "^10.3.4",
         "@types/semver": "^6.0.1",
-        "gulp": "^4.0.2",
-        "gulp-decompress": "^2.0.2",
-        "gulp-download": "0.0.1",
         "typescript": "^2.9.2",
         "vsce": "1.64.0",
         "vscode": "^1.1.35"
