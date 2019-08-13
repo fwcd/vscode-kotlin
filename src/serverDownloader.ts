@@ -19,11 +19,13 @@ export interface ServerInfo {
  * Downloads language servers or debug adapters from GitHub releases.
  */
 export class ServerDownloader {
+	private displayName: string;
 	private githubProjectName: string;
 	private assetName: string;
 	private installDir: string;
 	
-	constructor(githubProjectName: string, assetName: string, installDir: string) {
+	constructor(displayName: string, githubProjectName: string, assetName: string, installDir: string) {
+		this.displayName = displayName;
 		this.githubProjectName = githubProjectName;
 		this.installDir = installDir;
 		this.assetName = assetName;
@@ -59,16 +61,16 @@ export class ServerDownloader {
 		}
 		
 		const downloadDest = path.join(this.installDir, `download-${this.assetName}`);
-		progressMessage(`Downloading Kotlin Language Server ${version}...`);
+		progressMessage(`Downloading ${this.displayName} ${version}...`);
 		await download(downloadUrl, downloadDest, percent => {
-			progressMessage(`Downloading Kotlin Language Server ${version}: ${percent * 100} %`);
+			progressMessage(`Downloading ${this.displayName} ${version} :: ${(percent * 100).toFixed(2)} %`);
 		});
 		
-		progressMessage(`Unpacking Kotlin Language Server ${version}...`);
+		progressMessage(`Unpacking ${this.displayName} ${version}...`);
 		await extractZip(downloadDest, { dir: this.installDir });
 		await fsUnlink(downloadDest);
 		
-		progressMessage("Initializing Kotlin Language Server...");
+		progressMessage(`Initializing ${this.displayName}...`);
 	}
 	
 	async downloadServerIfNeeded(progressMessage: (msg: string) => void): Promise<void> {

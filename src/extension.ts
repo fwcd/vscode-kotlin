@@ -48,7 +48,7 @@ async function activateLanguageServer(context: vscode.ExtensionContext) {
     
     // Prepare language server
     const langServerInstallDir = path.join(resourcesDir, "langServerInstall");
-    const langServerDownloader = new ServerDownloader("kotlin-language-server", "server.zip", langServerInstallDir);
+    const langServerDownloader = new ServerDownloader("Kotlin Language Server", "kotlin-language-server", "server.zip", langServerInstallDir);
     try {
         await langServerDownloader.downloadServerIfNeeded(msg => updateStatusMessage(msg));
     } catch (error) {
