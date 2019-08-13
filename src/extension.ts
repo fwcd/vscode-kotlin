@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import { LOG } from './util/logger';
 import { activateLanguageServer, configureLanguage } from './languageSetup';
 import { registerDebugAdapter } from './debugSetup';
-import { StatusBarEntry } from './util/status';
+import { StatusBarEntry, Status } from './util/status';
 import { fsExists } from './util/fsUtils';
 
 // this method is called when your extension is activated
@@ -20,22 +20,31 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         await fs.promises.mkdir(context.globalStoragePath);
     }
     
-    const status = new StatusBarEntry(context, "$(sync~spin)");
-    status.update("Activating Kotlin extension...");
-    status.show();
+    const initTasks: Promise<void>[] = [];
     
     if (langServerEnabled) {
-        await activateLanguageServer(context, status);
+        initTasks.push(withSpinningStatus(context, async status => {
+            await activateLanguageServer(context, status);
+        }));
     } else {
         LOG.info("Skipping language server activation since 'kotlin.languageServer.enabled' is false");
     }
     
     if (debugAdapterEnabled) {
-        await registerDebugAdapter(context, status);
+        initTasks.push(withSpinningStatus(context, async status => {
+            await registerDebugAdapter(context, status);
+        }));
     } else {
         LOG.info("Skipping debug adapter registration since 'kotlin.debugAdapter.enabled' is false");
     }
     
+    await Promise.all(initTasks);
+}
+
+export async function withSpinningStatus(context: vscode.ExtensionContext, action: (status: Status) => Promise<void>): Promise<void> {
+    const status = new StatusBarEntry(context, "$(sync~spin)");
+    status.show();
+    await action(status);
     status.dispose();
 }
 
