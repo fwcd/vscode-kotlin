@@ -7,6 +7,7 @@ import { LOG } from './util/logger';
 import { isOSUnixoid, correctBinname, correctScriptName } from './util/osUtils';
 import { ServerDownloader } from './serverDownloader';
 import { Status } from "./util/status";
+import { fsExists } from "./util/fsUtils";
 
 /** Downloads and starts the language server. */
 export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status) {
@@ -26,7 +27,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     }
     
     status.update("Initializing Kotlin Language Server...");
-    const javaExecutablePath = findJavaExecutable('java');
+    const javaExecutablePath = await findJavaExecutable('java');
 
     if (javaExecutablePath == null) {
         vscode.window.showErrorMessage("Couldn't locate java in $JAVA_HOME or $PATH");
@@ -123,7 +124,7 @@ export function configureLanguage(): void {
     });
 }
 
-function findJavaExecutable(rawBinname: string): string {
+async function findJavaExecutable(rawBinname: string): Promise<string> {
 	let binname = correctBinname(rawBinname);
 
 	// First search java.home setting
@@ -132,7 +133,7 @@ function findJavaExecutable(rawBinname: string): string {
 	if (userJavaHome != null) {
         LOG.debug("Looking for Java in java.home (settings): {}", userJavaHome);
 
-        let candidate = findJavaExecutableInJavaHome(userJavaHome, binname);
+        let candidate = await findJavaExecutableInJavaHome(userJavaHome, binname);
 
         if (candidate != null)
             return candidate;
@@ -144,7 +145,7 @@ function findJavaExecutable(rawBinname: string): string {
 	if (envJavaHome) {
         LOG.debug("Looking for Java in JAVA_HOME (environment variable): {}", envJavaHome);
 
-        let candidate = findJavaExecutableInJavaHome(envJavaHome, binname);
+        let candidate = await findJavaExecutableInJavaHome(envJavaHome, binname);
 
         if (candidate != null)
             return candidate;
@@ -168,13 +169,15 @@ function findJavaExecutable(rawBinname: string): string {
 	return binname;
 }
 
-function findJavaExecutableInJavaHome(javaHome: string, binname: string): string {
+async function findJavaExecutableInJavaHome(javaHome: string, binname: string): Promise<string> {
     let workspaces = javaHome.split(path.delimiter);
 
     for (let i = 0; i < workspaces.length; i++) {
         let binpath = path.join(workspaces[i], 'bin', binname);
 
-        if (fs.existsSync(binpath))
+        if (await fsExists(binpath))
             return binpath;
-    }
+	}
+	
+	return null;
 }
