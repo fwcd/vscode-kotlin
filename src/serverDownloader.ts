@@ -1,11 +1,12 @@
 import * as extractZipWithCallback from "extract-zip";
 import * as path from "path";
 import * as semver from "semver";
+import * as requestPromise from "request-promise-native";
 import { promisify } from "util";
 import { fsExists, fsMkdir, fsReadFile, fsUnlink, fsWriteFile } from "./fsUtils";
 import { GitHubReleasesAPIResponse } from "./githubApi";
-import { httpsDownload, httpsGet } from "./httpsUtils";
 import { LOG } from "./logger";
+import { download } from "./downloadUtils";
 
 const extractZip = promisify(extractZipWithCallback);
 
@@ -29,9 +30,7 @@ export class ServerDownloader {
 	}
 	
 	private async latestReleaseInfo(): Promise<GitHubReleasesAPIResponse> {
-		const rawJson = await httpsGet({
-			host: "api.github.com",
-			path: `/repos/fwcd/${this.githubProjectName}/releases/latest`,
+		const rawJson = await requestPromise.get(`https://api.github.com/repos/fwcd/${this.githubProjectName}/releases/latest`, {
 			headers: { "User-Agent": "vscode-kotlin-ide" }
 		});
 		return JSON.parse(rawJson) as GitHubReleasesAPIResponse;
@@ -59,10 +58,9 @@ export class ServerDownloader {
 			await fsMkdir(this.installDir, { recursive: true });
 		}
 		
-		const installParentDir = path.join(this.installDir, "..");
-		const downloadDest = path.join(installParentDir, "serverDownload.zip");
+		const downloadDest = path.join(this.installDir, `download-${this.assetName}`);
 		progressMessage(`Downloading Kotlin Language Server ${version}...`);
-		await httpsDownload(downloadUrl, downloadDest);
+		await download(downloadUrl, downloadDest);
 		
 		progressMessage(`Unpacking Kotlin Language Server ${version}...`);
 		await extractZip(downloadDest, { dir: this.installDir });
