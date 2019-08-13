@@ -96,7 +96,7 @@
     "scripts": {
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "prepare": "gulp downloadLanguageServer",
+        "prepare": "gulp downloadLanguageServer && gulp downloadGrammars",
         "postinstall": "node ./node_modules/vscode/bin/install",
         "packageextension": "vsce package",
         "test": "node ./node_modules/vscode/bin/test"
