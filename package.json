@@ -96,6 +96,7 @@
     "scripts": {
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
+        "prepare": "gulp downloadLanguageServer",
         "postinstall": "node ./node_modules/vscode/bin/install",
         "packageextension": "vsce package",
         "test": "node ./node_modules/vscode/bin/test"
@@ -104,11 +105,14 @@
         "vscode": "^1.30.2"
     },
     "devDependencies": {
-        "typescript": "^2.9.2",
-        "vscode": "^1.1.35",
-        "vsce": "1.64.0",
+        "@types/mocha": "^5.2.3",
         "@types/node": "^10.3.4",
-        "@types/mocha": "^5.2.3"
+        "gulp": "^4.0.2",
+        "gulp-decompress": "^2.0.2",
+        "gulp-download": "0.0.1",
+        "typescript": "^2.9.2",
+        "vsce": "1.64.0",
+        "vscode": "^1.1.35"
     },
     "dependencies": {
         "vscode-languageclient": "^5.2.1"
