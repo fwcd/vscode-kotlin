@@ -18,6 +18,10 @@ out/**/*.map
 bin/**
 build/**
 
+# Automatically downloaded
+resources/langServerInstall
+resources/debugAdapterInstall
+
 tsconfig.json
 tslint.json
 
