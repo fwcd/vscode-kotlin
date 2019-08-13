@@ -2,8 +2,9 @@ import * as extractZipWithCallback from "extract-zip";
 import * as path from "path";
 import * as semver from "semver";
 import * as requestPromise from "request-promise-native";
+import * as fs from "fs";
 import { promisify } from "util";
-import { fsExists, fsMkdir, fsReadFile, fsUnlink, fsWriteFile } from "./util/fsUtils";
+import { fsExists } from "./util/fsUtils";
 import { GitHubReleasesAPIResponse } from "./githubApi";
 import { LOG } from "./util/logger";
 import { download } from "./util/downloadUtils";
@@ -47,7 +48,7 @@ export class ServerDownloader {
 	
 	private async installedServerInfo(): Promise<ServerInfo> {
 		try {
-			const info = JSON.parse((await fsReadFile(this.serverInfoFile())).toString("utf8")) as ServerInfo;
+			const info = JSON.parse((await fs.promises.readFile(this.serverInfoFile())).toString("utf8")) as ServerInfo;
 			return semver.valid(info.version) ? info : null;
 		} catch {
 			return null;
@@ -55,12 +56,12 @@ export class ServerDownloader {
 	}
 	
 	private async updateInstalledServerInfo(info: ServerInfo): Promise<void> {
-		await fsWriteFile(this.serverInfoFile(), JSON.stringify(info), { encoding: "utf8" });
+		await fs.promises.writeFile(this.serverInfoFile(), JSON.stringify(info), { encoding: "utf8" });
 	}
 	
 	private async downloadServer(downloadUrl: string, version: string, status: Status): Promise<void> {
 		if (!(await fsExists(this.installDir))) {
-			await fsMkdir(this.installDir, { recursive: true });
+			await fs.promises.mkdir(this.installDir, { recursive: true });
 		}
 		
 		const downloadDest = path.join(this.installDir, `download-${this.assetName}`);
@@ -71,7 +72,7 @@ export class ServerDownloader {
 		
 		status.update(`Unpacking ${this.displayName} ${version}...`);
 		await extractZip(downloadDest, { dir: this.installDir });
-		await fsUnlink(downloadDest);
+		await fs.promises.unlink(downloadDest);
 		
 		status.update(`Initializing ${this.displayName}...`);
 	}
