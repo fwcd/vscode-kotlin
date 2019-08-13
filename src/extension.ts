@@ -1,15 +1,14 @@
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
-import * as path from "path";
-import * as fs from "fs";
 import * as child_process from "child_process";
-import * as semver from "semver";
-import { LanguageClient, LanguageClientOptions, ServerOptions, RevealOutputChannelOn } from "vscode-languageclient";
-import { isOSUnixoid } from './osUtils';
+import * as fs from "fs";
+import * as path from "path";
+import * as vscode from 'vscode';
+import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOptions } from "vscode-languageclient";
 import { LOG } from './logger';
-import { installedServerInfo, latestServerVersion, downloadServer, updateInstalledServerInfo } from './languageServerDownloader';
+import { isOSUnixoid } from './osUtils';
+import { ServerDownloader } from './serverDownloader';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -46,36 +45,16 @@ async function activateLanguageServer(context: vscode.ExtensionContext) {
     updateStatusMessage("Activating Kotlin Language Server...");
     
     const resourcesDir = path.join(context.extensionPath, "resources")
-    const serverInstallDir = path.join(resourcesDir, "serverInstall");
     
-    // Download language server if necessary
-    const serverInfo = (await installedServerInfo(serverInstallDir)) || { version: "0.0.0", lastUpdate: Number.MIN_SAFE_INTEGER };
-    const secondsSinceLastUpdate = (Date.now() - serverInfo.lastUpdate) / 1000;
-    
-    if (secondsSinceLastUpdate > 240) {
-        // Only query GitHub API for latest version if some time has passed
-        LOG.info("Querying GitHub API for new KLS version...");
-        const latestVersion = await latestServerVersion();
-        const installedVersion = serverInfo.version;
-        const serverNeedsUpdate = semver.gt(latestVersion, installedVersion);
-        let newVersion = installedVersion;
-        
-        if (serverNeedsUpdate) {
-            try {
-                await downloadServer(serverInstallDir, msg => updateStatusMessage(msg));
-            } catch (error) {
-                console.error(error);
-                vscode.window.showErrorMessage(`Could not download language server: ${error}`);
-                cleanUp();
-                return;
-            }
-            newVersion = latestVersion;
-        }
-        
-        await updateInstalledServerInfo(serverInstallDir, {
-            version: newVersion,
-            lastUpdate: Date.now()
-        });
+    // Prepare language server
+    const langServerInstallDir = path.join(resourcesDir, "langServerInstall");
+    const langServerDownloader = new ServerDownloader("kotlin-language-server", "server.zip", langServerInstallDir);
+    try {
+        await langServerDownloader.downloadServerIfNeeded(msg => updateStatusMessage(msg));
+    } catch (error) {
+        vscode.window.showErrorMessage(`Could not download language server: ${error}`);
+        cleanUp();
+        return;
     }
     
     updateStatusMessage("Initializing Kotlin Language Server...");
@@ -108,7 +87,7 @@ async function activateLanguageServer(context: vscode.ExtensionContext) {
         outputChannelName: 'Kotlin',
         revealOutputChannelOn: RevealOutputChannelOn.Never
     }
-    let startScriptPath = path.resolve(serverInstallDir, "server", "bin", correctScriptName("kotlin-language-server"))
+    let startScriptPath = path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"))
     let args = [];
 
     // Ensure that start script can be executed
