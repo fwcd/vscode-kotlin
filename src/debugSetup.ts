@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
 import * as path from "path";
+import * as child_process from "child_process";
 import { Status } from "./util/status";
 import { ServerDownloader } from "./serverDownloader";
-import { correctScriptName } from "./util/osUtils";
+import { correctScriptName, isOSUnixoid } from "./util/osUtils";
 
 export async function registerDebugAdapter(context: vscode.ExtensionContext, status: Status): Promise<void> {
 	status.update("Registering Kotlin Debug Adapter...");
@@ -10,6 +11,7 @@ export async function registerDebugAdapter(context: vscode.ExtensionContext, sta
 	// Prepare debug adapter
 	const debugAdapterInstallDir = path.join(context.globalStoragePath, "debugAdapterInstall");
 	const debugAdapterDownloader = new ServerDownloader("Kotlin Debug Adapter", "kotlin-debug-adapter", "adapter.zip", debugAdapterInstallDir);
+	
 	try {
 		await debugAdapterDownloader.downloadServerIfNeeded(status);
 	} catch (error) {
@@ -19,6 +21,12 @@ export async function registerDebugAdapter(context: vscode.ExtensionContext, sta
 	}
 	
 	const startScriptPath = path.join(debugAdapterInstallDir, "adapter", "bin", correctScriptName("kotlin-debug-adapter"));
+	
+	// Ensure that start script can be executed
+    if (isOSUnixoid()) {
+        child_process.exec(`chmod +x ${startScriptPath}`);
+    }
+	
 	vscode.debug.registerDebugAdapterDescriptorFactory("kotlin", new KotlinDebugAdapterDescriptorFactory(startScriptPath));
 }
 

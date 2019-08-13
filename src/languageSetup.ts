@@ -16,7 +16,8 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     // Prepare language server
     const langServerInstallDir = path.join(context.globalStoragePath, "langServerInstall");
     const langServerDownloader = new ServerDownloader("Kotlin Language Server", "kotlin-language-server", "server.zip", langServerInstallDir);
-    try {
+	
+	try {
         await langServerDownloader.downloadServerIfNeeded(status);
     } catch (error) {
         console.error(error);
@@ -58,7 +59,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
 
     // Ensure that start script can be executed
     if (isOSUnixoid()) {
-        child_process.exec("chmod +x " + startScriptPath);
+        child_process.exec(`chmod +x ${startScriptPath}`);
     }
 
     // Start the child java process
