@@ -3,8 +3,8 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from 'vscode';
 import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOptions } from "vscode-languageclient";
-import { LOG } from './logger';
-import { isOSUnixoid } from './osUtils';
+import { LOG } from './util/logger';
+import { isOSUnixoid, correctBinname, correctScriptName } from './util/osUtils';
 import { ServerDownloader } from './serverDownloader';
 import { Status } from "./util/status";
 
@@ -17,7 +17,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     const langServerInstallDir = path.join(context.globalStoragePath, "langServerInstall");
     const langServerDownloader = new ServerDownloader("Kotlin Language Server", "kotlin-language-server", "server.zip", langServerInstallDir);
     try {
-        await langServerDownloader.downloadServerIfNeeded(msg => status.update(msg));
+        await langServerDownloader.downloadServerIfNeeded(status);
     } catch (error) {
         console.error(error);
         vscode.window.showErrorMessage(`Could not download language server: ${error}`);
@@ -33,7 +33,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     }
 
     // Options to control the language client
-    let clientOptions: LanguageClientOptions = {
+    const clientOptions: LanguageClientOptions = {
         // Register the server for Kotlin documents
         documentSelector: [{ language: 'kotlin', scheme: 'file' }],
         synchronize: {
@@ -53,8 +53,8 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
         outputChannelName: 'Kotlin',
         revealOutputChannelOn: RevealOutputChannelOn.Never
     }
-    let startScriptPath = path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"))
-    let args = [];
+    const startScriptPath = path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
+    const args = [];
 
     // Ensure that start script can be executed
     if (isOSUnixoid()) {
@@ -62,7 +62,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     }
 
     // Start the child java process
-    let serverOptions: ServerOptions = {
+    const serverOptions: ServerOptions = {
         command: startScriptPath,
         args: args,
         options: { cwd: vscode.workspace.rootPath }
@@ -71,8 +71,8 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     LOG.info("Launching {} with args {}", startScriptPath, args.join(' '));
 
     // Create the language client and start the client.
-    let languageClient = new LanguageClient('kotlin', 'Kotlin Language Server', serverOptions, clientOptions);
-    let languageClientDisposable = languageClient.start();
+    const languageClient = new LanguageClient('kotlin', 'Kotlin Language Server', serverOptions, clientOptions);
+    const languageClientDisposable = languageClient.start();
 
     await languageClient.onReady();
     // Push the disposable to the context's subscriptions so that the
@@ -165,14 +165,6 @@ function findJavaExecutable(rawBinname: string): string {
     // Else return the binary name directly (this will likely always fail downstream)
     LOG.debug("Could not find Java, will try using binary name directly");
 	return binname;
-}
-
-function correctBinname(binname: string): string {
-    return binname + ((process.platform === 'win32') ? '.exe' : '');
-}
-
-function correctScriptName(binname: string): string {
-    return binname + ((process.platform === 'win32') ? '.bat' : '');
 }
 
 function findJavaExecutableInJavaHome(javaHome: string, binname: string): string {

@@ -9,3 +9,11 @@ export function isOSUnixoid(): boolean {
 		|| platform === "freebsd"
 		|| platform === "openbsd";
 }
+
+export function correctBinname(binname: string): string {
+    return binname + ((process.platform === 'win32') ? '.exe' : '');
+}
+
+export function correctScriptName(binname: string): string {
+    return binname + ((process.platform === 'win32') ? '.bat' : '');
+}

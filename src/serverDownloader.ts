@@ -3,10 +3,11 @@ import * as path from "path";
 import * as semver from "semver";
 import * as requestPromise from "request-promise-native";
 import { promisify } from "util";
-import { fsExists, fsMkdir, fsReadFile, fsUnlink, fsWriteFile } from "./fsUtils";
+import { fsExists, fsMkdir, fsReadFile, fsUnlink, fsWriteFile } from "./util/fsUtils";
 import { GitHubReleasesAPIResponse } from "./githubApi";
-import { LOG } from "./logger";
-import { download } from "./downloadUtils";
+import { LOG } from "./util/logger";
+import { download } from "./util/downloadUtils";
+import { Status } from "./util/status";
 
 const extractZip = promisify(extractZipWithCallback);
 
@@ -17,6 +18,8 @@ export interface ServerInfo {
 
 /**
  * Downloads language servers or debug adapters from GitHub releases.
+ * The downloaded automatically manages versioning and downloads
+ * updates if necessary.
  */
 export class ServerDownloader {
 	private displayName: string;
@@ -55,25 +58,25 @@ export class ServerDownloader {
 		await fsWriteFile(this.serverInfoFile(), JSON.stringify(info), { encoding: "utf8" });
 	}
 	
-	private async downloadServer(downloadUrl: string, version: string, progressMessage: (msg: string) => void): Promise<void> {
+	private async downloadServer(downloadUrl: string, version: string, status: Status): Promise<void> {
 		if (!(await fsExists(this.installDir))) {
 			await fsMkdir(this.installDir, { recursive: true });
 		}
 		
 		const downloadDest = path.join(this.installDir, `download-${this.assetName}`);
-		progressMessage(`Downloading ${this.displayName} ${version}...`);
+		status.update(`Downloading ${this.displayName} ${version}...`);
 		await download(downloadUrl, downloadDest, percent => {
-			progressMessage(`Downloading ${this.displayName} ${version} :: ${(percent * 100).toFixed(2)} %`);
+			status.update(`Downloading ${this.displayName} ${version} :: ${(percent * 100).toFixed(2)} %`);
 		});
 		
-		progressMessage(`Unpacking ${this.displayName} ${version}...`);
+		status.update(`Unpacking ${this.displayName} ${version}...`);
 		await extractZip(downloadDest, { dir: this.installDir });
 		await fsUnlink(downloadDest);
 		
-		progressMessage(`Initializing ${this.displayName}...`);
+		status.update(`Initializing ${this.displayName}...`);
 	}
 	
-	async downloadServerIfNeeded(progressMessage: (msg: string) => void): Promise<void> {
+	async downloadServerIfNeeded(status: Status): Promise<void> {
 		const serverInfo = (await this.installedServerInfo()) || { version: "0.0.0", lastUpdate: Number.MIN_SAFE_INTEGER };
 		const secondsSinceLastUpdate = (Date.now() - serverInfo.lastUpdate) / 1000;
 		
@@ -91,7 +94,7 @@ export class ServerDownloader {
 				const serverAsset = releaseInfo.assets.find(asset => asset.name === this.assetName);
 				if (serverAsset) {
 					const downloadUrl = serverAsset.browser_download_url;
-					await this.downloadServer(downloadUrl, latestVersion, msg => progressMessage(msg));
+					await this.downloadServer(downloadUrl, latestVersion, status);
 				} else {
 					throw new Error(`Latest GitHub release for ${this.githubProjectName} does not contain the asset '${this.assetName}'!`);
 				}

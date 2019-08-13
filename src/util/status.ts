@@ -1,14 +1,8 @@
 import * as vscode from "vscode";
 
 export interface Status {
-	/** Displays the status to the user. */
-	show(): void;
-	
 	/** Updates the message. */
 	update(msg: string): void;
-	
-	/** Disposes of this status. */
-	dispose(): void;
 }
 
 /**

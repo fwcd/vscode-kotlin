@@ -1,9 +1,9 @@
 'use strict';
 import * as vscode from 'vscode';
-import { LOG } from './logger';
+import { LOG } from './util/logger';
 import { activateLanguageServer, configureLanguage } from './languageSetup';
 import { registerDebugAdapter } from './debugSetup';
-import { fsExists, fsMkdir } from './fsUtils';
+import { fsExists, fsMkdir } from './util/fsUtils';
 import { StatusBarEntry } from './util/status';
 
 // this method is called when your extension is activated
@@ -20,6 +20,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     }
     
     const status = new StatusBarEntry(context, "$(sync~spin)");
+    status.update("Activating Kotlin extension...");
+    status.show();
     
     if (langServerEnabled) {
         await activateLanguageServer(context, status);
