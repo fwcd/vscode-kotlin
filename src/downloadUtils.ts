@@ -1,10 +1,14 @@
 import * as request from "request";
 import * as fs from "fs";
 
-export function download(srcUrl: string, destPath: fs.PathLike): Promise<void> {
+const requestProgress = require("request-progress");
+
+export function download(srcUrl: string, destPath: fs.PathLike, progress: (percent: number) => void): Promise<void> {
 	return new Promise((resolve, reject) => {
-		request.get(srcUrl, (err, res, body) => {
-			if (err) reject(err);
-		}).on("complete", () => resolve()).pipe(fs.createWriteStream(destPath));
+		requestProgress(request.get(srcUrl))
+			.on("progress", state => progress(state.percent))
+			.on("complete", () => resolve())
+			.on("error", err => reject(err))
+			.pipe(fs.createWriteStream(destPath));
 	});
 }

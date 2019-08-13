@@ -60,7 +60,9 @@ export class ServerDownloader {
 		
 		const downloadDest = path.join(this.installDir, `download-${this.assetName}`);
 		progressMessage(`Downloading Kotlin Language Server ${version}...`);
-		await download(downloadUrl, downloadDest);
+		await download(downloadUrl, downloadDest, percent => {
+			progressMessage(`Downloading Kotlin Language Server ${version}: ${percent * 100} %`);
+		});
 		
 		progressMessage(`Unpacking Kotlin Language Server ${version}...`);
 		await extractZip(downloadDest, { dir: this.installDir });
@@ -73,7 +75,7 @@ export class ServerDownloader {
 		const serverInfo = (await this.installedServerInfo()) || { version: "0.0.0", lastUpdate: Number.MIN_SAFE_INTEGER };
 		const secondsSinceLastUpdate = (Date.now() - serverInfo.lastUpdate) / 1000;
 		
-		if (secondsSinceLastUpdate > 240) {
+		if (secondsSinceLastUpdate > 480) {
 			// Only query GitHub API for latest version if some time has passed
 			LOG.info("Querying GitHub API for new KLS version...");
 			
