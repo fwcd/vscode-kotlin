@@ -2,6 +2,7 @@
 Smart code completion, linting, debugging and more for Kotlin in VSCode using the [language server](https://github.com/fwcd/kotlin-language-server).
 
 [![Version](https://img.shields.io/visual-studio-marketplace/v/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
+[![Build Status](https://travis-ci.org/fwcd/vscode-kotlin-ide.svg?branch=master)](https://travis-ci.org/fwcd/vscode-kotlin-ide)
 [![Downloads](https://img.shields.io/visual-studio-marketplace/d/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
 [![Installs](https://img.shields.io/visual-studio-marketplace/i/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
 
