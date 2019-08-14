@@ -22,6 +22,7 @@ deploy:
       repo: fwcd/vscode-kotlin-ide
   - provider: script
     script: vsce publish -p $VSC_TOKEN
+    skip_cleanup: true
     on:
       tags: true
       repo: fwcd/vscode-kotlin-ide
