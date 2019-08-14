@@ -15,3 +15,12 @@ To use, open a Kotlin file inside a Gradle or Maven project. The language server
 * Signature help
 * Hover
 * Document symbols
+
+## Usage
+
+### Debugging
+* Setup:
+    * Open the `launch.json` file in your project and invoke code completion to create a new launch configuration (or select `Add Configuration...` in the debug tab)
+* Launch:
+    * `./gradlew build` your project (before every launch)
+	* Click the `Run` button in the `Debug` tab or press `F5`
