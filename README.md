@@ -1,5 +1,5 @@
 # Kotlin IDE for Visual Studio Code
-Smart code completion, linting, debugging and more for Kotlin in VSCode using the [language server](https://github.com/fwcd/kotlin-language-server).
+Smart code completion, linting, debugging, formatting and more for Kotlin in VSCode using the [Kotlin language server](https://github.com/fwcd/kotlin-language-server) and the [Kotlin debug adapter](https://github.com/fwcd/kotlin-debug-adapter).
 
 [![Version](https://img.shields.io/visual-studio-marketplace/v/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
 [![Build Status](https://travis-ci.org/fwcd/vscode-kotlin-ide.svg?branch=master)](https://travis-ci.org/fwcd/vscode-kotlin-ide)
@@ -15,7 +15,9 @@ To use, open a Kotlin file inside a Gradle or Maven project. The language server
 * Go-to-definition
 * Signature help
 * Hover
+* Formatting
 * Document symbols
+* Find references
 
 ## Usage
 
@@ -23,5 +25,5 @@ To use, open a Kotlin file inside a Gradle or Maven project. The language server
 * Setup:
     * Open the `launch.json` file in your project and invoke code completion to create a new launch configuration (or select `Add Configuration...` in the debug tab)
 * Launch:
-    * `./gradlew build` your project (before every launch)
+    * Build your project (before every launch)
 	* Click the `Run` button in the `Debug` tab or press `F5`
