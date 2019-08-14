@@ -233,6 +233,7 @@
     "scripts": {
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
+        "prepare": "node ./scripts/downloadGrammar.js",
         "postinstall": "node ./node_modules/vscode/bin/install",
         "packageextension": "vsce package",
         "test": "node ./node_modules/vscode/bin/test"
