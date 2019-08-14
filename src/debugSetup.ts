@@ -5,22 +5,25 @@ import { Status } from "./util/status";
 import { ServerDownloader } from "./serverDownloader";
 import { correctScriptName, isOSUnixoid } from "./util/osUtils";
 
-export async function registerDebugAdapter(context: vscode.ExtensionContext, status: Status): Promise<void> {
+export async function registerDebugAdapter(context: vscode.ExtensionContext, status: Status, customPath?: string): Promise<void> {
 	status.update("Registering Kotlin Debug Adapter...");
 	
 	// Prepare debug adapter
 	const debugAdapterInstallDir = path.join(context.globalStoragePath, "debugAdapterInstall");
-	const debugAdapterDownloader = new ServerDownloader("Kotlin Debug Adapter", "kotlin-debug-adapter", "adapter.zip", debugAdapterInstallDir);
 	
-	try {
-		await debugAdapterDownloader.downloadServerIfNeeded(status);
-	} catch (error) {
-		console.error(error);
-		vscode.window.showErrorMessage(`Could not download debug adapter: ${error}`);
-		return;
+	if (!customPath) {
+		const debugAdapterDownloader = new ServerDownloader("Kotlin Debug Adapter", "kotlin-debug-adapter", "adapter.zip", debugAdapterInstallDir);
+		
+		try {
+			await debugAdapterDownloader.downloadServerIfNeeded(status);
+		} catch (error) {
+			console.error(error);
+			vscode.window.showErrorMessage(`Could not download debug adapter: ${error}`);
+			return;
+		}
 	}
 	
-	const startScriptPath = path.join(debugAdapterInstallDir, "adapter", "bin", correctScriptName("kotlin-debug-adapter"));
+	const startScriptPath = customPath || path.join(debugAdapterInstallDir, "adapter", "bin", correctScriptName("kotlin-debug-adapter"));
 	
 	// Ensure that start script can be executed
     if (isOSUnixoid()) {

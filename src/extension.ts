@@ -23,16 +23,22 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     const initTasks: Promise<void>[] = [];
     
     if (langServerEnabled) {
+        // Optionally a custom path to the language server executable
+        let customPath = nullIfEmpty(kotlinConfig.get("languageServer.path"));
+        
         initTasks.push(withSpinningStatus(context, async status => {
-            await activateLanguageServer(context, status);
+            await activateLanguageServer(context, status, customPath);
         }));
     } else {
         LOG.info("Skipping language server activation since 'kotlin.languageServer.enabled' is false");
     }
     
     if (debugAdapterEnabled) {
+        // Optionally a custom path to the debug adapter executable
+        let customPath = nullIfEmpty(kotlinConfig.get("debugAdapter.path"));
+        
         initTasks.push(withSpinningStatus(context, async status => {
-            await registerDebugAdapter(context, status);
+            await registerDebugAdapter(context, status, customPath);
         }));
     } else {
         LOG.info("Skipping debug adapter registration since 'kotlin.debugAdapter.enabled' is false");
@@ -41,7 +47,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     await Promise.all(initTasks);
 }
 
-export async function withSpinningStatus(context: vscode.ExtensionContext, action: (status: Status) => Promise<void>): Promise<void> {
+function nullIfEmpty(s: string): string | null {
+    return (s === "") ? null : s;
+}
+
+async function withSpinningStatus(context: vscode.ExtensionContext, action: (status: Status) => Promise<void>): Promise<void> {
     const status = new StatusBarEntry(context, "$(sync~spin)");
     status.show();
     await action(status);

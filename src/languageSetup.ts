@@ -10,20 +10,23 @@ import { Status } from "./util/status";
 import { fsExists } from "./util/fsUtils";
 
 /** Downloads and starts the language server. */
-export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status) {
+export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status, customPath?: string) {
     LOG.info('Activating Kotlin Language Server...');
     status.update("Activating Kotlin Language Server...");
     
     // Prepare language server
     const langServerInstallDir = path.join(context.globalStoragePath, "langServerInstall");
-    const langServerDownloader = new ServerDownloader("Kotlin Language Server", "kotlin-language-server", "server.zip", langServerInstallDir);
-	
-	try {
-        await langServerDownloader.downloadServerIfNeeded(status);
-    } catch (error) {
-        console.error(error);
-        vscode.window.showErrorMessage(`Could not download language server: ${error}`);
-        return;
+    
+    if (!customPath) {
+        const langServerDownloader = new ServerDownloader("Kotlin Language Server", "kotlin-language-server", "server.zip", langServerInstallDir);
+        
+        try {
+            await langServerDownloader.downloadServerIfNeeded(status);
+        } catch (error) {
+            console.error(error);
+            vscode.window.showErrorMessage(`Could not download language server: ${error}`);
+            return;
+        }
     }
     
     status.update("Initializing Kotlin Language Server...");
@@ -55,7 +58,8 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
         outputChannelName: 'Kotlin',
         revealOutputChannelOn: RevealOutputChannelOn.Never
     }
-    const startScriptPath = path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
+    
+    const startScriptPath = customPath || path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
     const args = [];
 
     // Ensure that start script can be executed
