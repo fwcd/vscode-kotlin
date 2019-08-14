@@ -81,8 +81,8 @@
 							},
 							"mainClass": {
 								"type": "string",
-								"description": "The full name of your main class (usually your filename in PascalCase postfixed with Kt)",
-								"default": "YourMainClassKt"
+								"description": "The fully qualified name of your main class (usually your filename in PascalCase postfixed with Kt)",
+								"default": "path.to.your.MainClassKt"
 							},
 							"enableJsonLogging": {
 								"type": "boolean",
@@ -147,7 +147,7 @@
 						"request": "launch",
 						"name": "Kotlin Launch",
 						"projectRoot": "${workspaceFolder}",
-						"mainClass": "YourMainClassKt"
+						"mainClass": "path.to.your.MainClassKt"
 					}
 				],
 				"configurationSnippets": [
@@ -159,7 +159,7 @@
 							"request": "launch",
 							"name": "Kotlin Launch",
 							"projectRoot": "^\"\\${workspaceFolder}\"",
-							"mainClass": "YourMainClassKt"
+							"mainClass": "path.to.your.MainClassKt"
 						}
 					},
 					{
