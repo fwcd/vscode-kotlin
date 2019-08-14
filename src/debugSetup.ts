@@ -18,7 +18,7 @@ export async function registerDebugAdapter(context: vscode.ExtensionContext, sta
 			await debugAdapterDownloader.downloadServerIfNeeded(status);
 		} catch (error) {
 			console.error(error);
-			vscode.window.showErrorMessage(`Could not download debug adapter: ${error}`);
+			vscode.window.showWarningMessage(`Could not update/download Kotlin Debug Adapter: ${error}`);
 			return;
 		}
 	}

@@ -23,8 +23,8 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
         try {
             await langServerDownloader.downloadServerIfNeeded(status);
         } catch (error) {
-            console.error(error);
-            vscode.window.showErrorMessage(`Could not download language server: ${error}`);
+			console.error(error);
+            vscode.window.showWarningMessage(`Could not update/download Kotlin Language Server: ${error}`);
             return;
         }
     }

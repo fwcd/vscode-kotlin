@@ -78,16 +78,33 @@ export class ServerDownloader {
 	}
 	
 	async downloadServerIfNeeded(status: Status): Promise<void> {
-		const serverInfo = (await this.installedServerInfo()) || { version: "0.0.0", lastUpdate: Number.MIN_SAFE_INTEGER };
-		const secondsSinceLastUpdate = (Date.now() - serverInfo.lastUpdate) / 1000;
+		const serverInfo = await this.installedServerInfo();
+		const serverInfoOrDefault = serverInfo || { version: "0.0.0", lastUpdate: Number.MIN_SAFE_INTEGER };
+		const secondsSinceLastUpdate = (Date.now() - serverInfoOrDefault.lastUpdate) / 1000;
 		
 		if (secondsSinceLastUpdate > 480) {
 			// Only query GitHub API for latest version if some time has passed
-			LOG.info("Querying GitHub API for new KLS version...");
+			LOG.info(`Querying GitHub API for new ${this.displayName} version...`);
 			
-			const releaseInfo = await this.latestReleaseInfo();
+			let releaseInfo: GitHubReleasesAPIResponse;
+			
+			try {
+				releaseInfo = await this.latestReleaseInfo();
+			} catch (error) {
+				const message = `Could not fetch from GitHub releases API: ${error}.`;
+				if (serverInfo == null) {
+					// No server is installed yet, so throw
+					throw new Error(message);
+				} else {
+					// Do not throw since user might just be offline
+					// and a version of the server is already installed
+					LOG.warn(message);
+					return;
+				}
+			}
+			
 			const latestVersion = releaseInfo.tag_name;
-			const installedVersion = serverInfo.version;
+			const installedVersion = serverInfoOrDefault.version;
 			const serverNeedsUpdate = semver.gt(latestVersion, installedVersion);
 			let newVersion = installedVersion;
 			
