@@ -76,66 +76,72 @@
 						"properties": {
 							"projectRoot": {
 								"type": "string",
-								"description": "Absolute path to your project's root folder",
+								"description": "Absolute path to your project's root folder. If you want to debug a subproject, specify the root/top-level directory here and the relative path in the 'subproject' attribute.",
 								"default": "${workspaceFolder}"
-							},
+                            },
 							"mainClass": {
 								"type": "string",
-								"description": "The fully qualified name of your main class (usually your filename in PascalCase postfixed with Kt)",
+								"description": "The fully qualified name of your main class (usually your filename in PascalCase postfixed with Kt).",
 								"default": "path.to.your.MainClassKt"
 							},
 							"enableJsonLogging": {
 								"type": "boolean",
-								"description": "Enables logging of debug server JSON messages into a file defined by 'jsonLogFile'",
+								"description": "Enables logging of debug server JSON messages into a file defined by 'jsonLogFile'.",
 								"default": false
 							},
 							"jsonLogFile": {
 								"type": "string",
-								"description": "Enables logging of debug server JSON messages into a file defined by 'jsonLogFile'",
+								"description": "Enables logging of debug server JSON messages into a file defined by 'jsonLogFile'.",
 								"default": "${workspaceFolder}/ktDebugJsonLog.txt"
 							},
 							"logLevel": {
 								"type": "string",
-								"description": "Sets the logging level of the debug server for the messages in the Debug Console [NONE/ERROR/WARN/INFO/DEBUG/TRACE/DEEP_TRACE/ALL]",
+								"description": "Sets the logging level of the debug server for the messages in the Debug Console [NONE/ERROR/WARN/INFO/DEBUG/TRACE/DEEP_TRACE/ALL].",
 								"default": "INFO"
 							}
 						}
 					},
 					"attach": {
 						"required": [
+							"projectRoot",
 							"hostName",
 							"port",
 							"timeout"
 						],
 						"properties": {
+                            "projectRoot": {
+								"type": "string",
+								"description": "Absolute path to your project's root folder. If you want to debug a subproject, specify the root/top-level directory here and the relative path in the 'subproject' attribute.",
+								"default": "${workspaceFolder}"
+                            },
 							"hostName": {
 								"type": "string",
-								"description": "The host name of your running JVM",
+								"description": "The host name of your running JVM.",
 								"default": "localhost"
 							},
 							"port": {
 								"type": "number",
-								"description": "The port number of your running JVM",
+								"description": "The port number of your running JVM.",
 								"default": 8000
 							},
 							"timeout": {
 								"type": "number",
-								"description": "The connection timeout",
+								"description": "The connection timeout.",
 								"default": 30000
 							},
 							"enableJsonLogging": {
 								"type": "boolean",
-								"description": "Enables logging of debug server JSON messages into a file defined by 'jsonLogFile'",
+								"description": "Enables logging of debug server JSON messages into a file defined by 'jsonLogFile'.",
 								"default": false
 							},
 							"jsonLogFile": {
 								"type": "string",
-								"description": "Enables logging of debug server JSON messages into a file defined by 'jsonLogFile'",
+								"description": "Enables logging of debug server JSON messages into a file defined by 'jsonLogFile'.",
 								"default": "${workspaceFolder}/ktDebugJsonLog.txt"
 							},
 							"logLevel": {
 								"type": "string",
-								"description": "Sets the logging level of the debug server for the messages in the Debug Console [NONE/ERROR/WARN/INFO/DEBUG/TRACE/DEEP_TRACE/ALL]",
+								"description": "Sets the logging level of the debug server for the messages in the Debug Console [NONE/ERROR/WARN/INFO/DEBUG/TRACE/DEEP_TRACE/ALL].",
 								"default": "INFO"
 							}
 						}
