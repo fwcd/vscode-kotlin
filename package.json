@@ -221,6 +221,11 @@
                     "default": true,
                     "description": "Specifies whether code completion should provide snippets (true) or plain-text items (false)."
                 },
+                "kotlin.uri.useKlsScheme": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "[Recommended] Specifies whether URIs inside JARs should be represented using the 'kls'-scheme."
+                },
                 "kotlin.debugAdapter.enabled": {
                     "type": "boolean",
                     "default": true,

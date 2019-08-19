@@ -8,6 +8,7 @@ import { isOSUnixoid, correctBinname, correctScriptName } from './util/osUtils';
 import { ServerDownloader } from './serverDownloader';
 import { Status } from "./util/status";
 import { fsExists } from "./util/fsUtils";
+import { JarClassContentProvider } from "./jarClassContentProvider";
 
 /** Downloads and starts the language server. */
 export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status, customPath?: string) {
@@ -40,6 +41,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
         // Register the server for Kotlin documents
+        // TODO: Support the 'kls' scheme (e.g. for decompiled classes or classes in source JARs)
         documentSelector: [{ language: 'kotlin', scheme: 'file' }],
         synchronize: {
             // Synchronize the setting section 'kotlin' to the server
@@ -77,10 +79,14 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     LOG.info("Launching {} with args {}", startScriptPath, args.join(' '));
 
     // Create the language client and start the client.
-    const languageClient = new LanguageClient('kotlin', 'Kotlin Language Server', serverOptions, clientOptions);
+    const languageClient = new LanguageClient("kotlin", "Kotlin Language Server", serverOptions, clientOptions);
     const languageClientDisposable = languageClient.start();
+    
+    // Register a content provider for the 'kls' scheme
+    vscode.workspace.registerTextDocumentContentProvider("kls", new JarClassContentProvider(languageClient));
 
     await languageClient.onReady();
+    
     // Push the disposable to the context's subscriptions so that the
     // client can be deactivated on extension deactivation
     context.subscriptions.push(languageClientDisposable);
