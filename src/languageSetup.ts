@@ -41,8 +41,10 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
         // Register the server for Kotlin documents
-        // TODO: Support the 'kls' scheme (e.g. for decompiled classes or classes in source JARs)
-        documentSelector: [{ language: 'kotlin', scheme: 'file' }],
+        documentSelector: [
+            { language: 'kotlin', scheme: 'file' },
+            { language: 'kotlin', scheme: 'kls' }
+        ],
         synchronize: {
             // Synchronize the setting section 'kotlin' to the server
             // NOTE: this currently doesn't do anything
