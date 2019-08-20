@@ -221,11 +221,6 @@
                     "default": true,
                     "description": "Specifies whether code completion should provide snippets (true) or plain-text items (false)."
                 },
-                "kotlin.uri.useKlsScheme": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "[Recommended] Specifies whether URIs inside JARs should be represented using the 'kls'-scheme."
-                },
                 "kotlin.debugAdapter.enabled": {
                     "type": "boolean",
                     "default": true,
@@ -241,6 +236,16 @@
                     "default": 250,
                     "description": "[DEPRECATED] Specifies the debounce time limit. Lower to increase responsiveness at the cost of possibile stability issues.",
                     "deprecationMessage": "Use 'kotlin.linting.debounceTime' instead"
+                },
+                "kotlin.externalSources.useKlsScheme": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "[Recommended] Specifies whether URIs inside JARs should be represented using the 'kls'-scheme."
+                },
+                "kotlin.externalSources.autoConvertToKotlin": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Specifies whether decompiled/external classes should be auto-converted to Kotlin."
                 },
                 "kotlin.snippetsEnabled": {
                     "type": "boolean",
