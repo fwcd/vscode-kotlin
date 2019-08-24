@@ -16,7 +16,7 @@ export class JarClassContentProvider implements vscode.TextDocumentContentProvid
 	async provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
 		const result = await this.client.sendRequest(JarClassContentsRequest.type, { uri: uri.toString() });
 		if (result == null) {
-			vscode.window.showErrorMessage(`Could not fetch class file contents of '${uri}' from the language server. Make sure that it conforms to the format 'kls:file:///path/to/myJar.jar!/path/to/myClass.class'!`)
+			vscode.window.showErrorMessage(`Could not fetch class file contents of '${uri}' from the language server. Make sure that it conforms to the format 'kls:file:///path/to/myJar.jar!/path/to/myClass.class'!`);
 			return "";
 		} else {
 			return result;

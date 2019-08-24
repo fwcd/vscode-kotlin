@@ -76,7 +76,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
         command: startScriptPath,
         args: args,
         options: { cwd: vscode.workspace.rootPath }
-    }
+    };
 
     LOG.info("Launching {} with args {}", startScriptPath, args.join(' '));
 
