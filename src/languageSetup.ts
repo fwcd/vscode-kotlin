@@ -82,16 +82,16 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
 
     // Create the language client and start the client.
     const languageClient = new LanguageClient("kotlin", "Kotlin Language Server", serverOptions, clientOptions);
-    const languageClientDisposable = languageClient.start();
+    context.subscriptions.push(languageClient.start());
     
     // Register a content provider for the 'kls' scheme
-    vscode.workspace.registerTextDocumentContentProvider("kls", new JarClassContentProvider(languageClient));
+    context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider("kls", new JarClassContentProvider(languageClient)));
+    context.subscriptions.push(vscode.commands.registerCommand("kotlin.languageServer.restart", async () => {
+        await languageClient.stop();
+        await languageClient.start();
+    }));
 
     await languageClient.onReady();
-    
-    // Push the disposable to the context's subscriptions so that the
-    // client can be deactivated on extension deactivation
-    context.subscriptions.push(languageClientDisposable);
 }
 
 export function configureLanguage(): void {
