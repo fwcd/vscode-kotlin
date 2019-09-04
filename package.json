@@ -60,7 +60,8 @@
         "commands": [
             {
                 "command": "kotlin.languageServer.restart",
-                "title": "Restart the Kotlin Language Server"
+                "title": "Restart the Language Server",
+                "category": "Kotlin"
             }
         ],
         "breakpoints": [
