@@ -1,11 +1,13 @@
 'use strict';
-import * as vscode from 'vscode';
 import * as fs from 'fs';
-import { LOG } from './util/logger';
-import { activateLanguageServer, configureLanguage } from './languageSetup';
+import * as path from 'path';
+import * as vscode from 'vscode';
 import { registerDebugAdapter } from './debugSetup';
-import { StatusBarEntry, Status } from './util/status';
+import { InternalConfigManager } from './internalConfig';
+import { activateLanguageServer, configureLanguage } from './languageSetup';
 import { fsExists } from './util/fsUtils';
+import { LOG } from './util/logger';
+import { Status, StatusBarEntry } from './util/status';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -20,6 +22,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         await fs.promises.mkdir(context.globalStoragePath);
     }
     
+    const internalConfigPath = path.join(context.globalStoragePath, "config.json");
+    const internalConfigManager = await InternalConfigManager.loadingConfigFrom(internalConfigPath);
+    
+    if (!internalConfigManager.getConfig().initialized) {
+        const message = "The Kotlin extension will automatically download a language server and a debug adapter to provide code completion, linting, debugging and more. If you prefer to install these yourself, you can provide custom paths or disable them in your settings.";
+        await vscode.window.showInformationMessage(message, "Ok, continue");
+        await internalConfigManager.updateConfig({ initialized: true });
+    }
+
     const initTasks: Promise<void>[] = [];
     
     if (langServerEnabled) {
