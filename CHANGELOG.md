@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to the Kotlin extension will be documented here.
 
-## [0.2.9]
+## [0.2.10]
 - Improved class file navigation
 - Confirmation prompt before downloading binaries ([#7](https://github.com/fwcd/vscode-kotlin-ide/issues/7))
 
