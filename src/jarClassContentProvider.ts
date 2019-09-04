@@ -13,6 +13,10 @@ export class JarClassContentProvider implements vscode.TextDocumentContentProvid
 		this.client = client;
 	}
 	
+	public setClient(client: LanguageClient) {
+		this.client = client;
+	}
+	
 	async provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
 		const result = await this.client.sendRequest(JarClassContentsRequest.type, { uri: uri.toString() });
 		if (result == null) {

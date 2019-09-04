@@ -38,6 +38,40 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
         return;
     }
 
+    const outputChannel = vscode.window.createOutputChannel("Kotlin");
+    context.subscriptions.push(outputChannel);
+
+    const startScriptPath = customPath || path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
+    const options = { outputChannel, startScriptPath, args: [] };
+    const languageClient = createLanguageClient(options);
+
+    // Create the language client and start the client.
+    let languageClientDisposable = languageClient.start();
+    context.subscriptions.push(languageClientDisposable);
+    
+    // Register a content provider for the 'kls' scheme
+    const contentProvider = new JarClassContentProvider(languageClient);
+    context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider("kls", contentProvider));
+    context.subscriptions.push(vscode.commands.registerCommand("kotlin.languageServer.restart", async () => {
+        await languageClient.stop();
+        languageClientDisposable.dispose();
+
+        outputChannel.appendLine("");
+        outputChannel.appendLine(" === Language Server Restart ===")
+        outputChannel.appendLine("");
+
+        languageClientDisposable = languageClient.start();
+        context.subscriptions.push(languageClientDisposable);
+    }));
+
+    await languageClient.onReady();
+}
+
+function createLanguageClient(options: {
+    outputChannel: vscode.OutputChannel,
+    startScriptPath: string,
+    args: string[]
+}): LanguageClient {
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
         // Register the server for Kotlin documents
@@ -59,39 +93,24 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
                 vscode.workspace.createFileSystemWatcher('**/settings.gradle')
             ]
         },
-        outputChannelName: 'Kotlin',
+        outputChannel: options.outputChannel,
         revealOutputChannelOn: RevealOutputChannelOn.Never
     }
     
-    const startScriptPath = customPath || path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
-    const args = [];
-
     // Ensure that start script can be executed
     if (isOSUnixoid()) {
-        child_process.exec(`chmod +x ${startScriptPath}`);
+        child_process.exec(`chmod +x ${options.startScriptPath}`);
     }
 
     // Start the child java process
     const serverOptions: ServerOptions = {
-        command: startScriptPath,
-        args: args,
+        command: options.startScriptPath,
+        args: options.args,
         options: { cwd: vscode.workspace.rootPath }
     };
 
-    LOG.info("Launching {} with args {}", startScriptPath, args.join(' '));
-
-    // Create the language client and start the client.
-    const languageClient = new LanguageClient("kotlin", "Kotlin Language Server", serverOptions, clientOptions);
-    context.subscriptions.push(languageClient.start());
-    
-    // Register a content provider for the 'kls' scheme
-    context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider("kls", new JarClassContentProvider(languageClient)));
-    context.subscriptions.push(vscode.commands.registerCommand("kotlin.languageServer.restart", async () => {
-        await languageClient.stop();
-        await languageClient.start();
-    }));
-
-    await languageClient.onReady();
+    LOG.info("Creating client {} with args {}", options.startScriptPath, options.args.join(' '));
+    return new LanguageClient("kotlin", "Kotlin Language Server", serverOptions, clientOptions);
 }
 
 export function configureLanguage(): void {
