@@ -27,7 +27,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     
     if (!internalConfigManager.getConfig().initialized) {
         const message = "The Kotlin extension will automatically download a language server and a debug adapter to provide code completion, linting, debugging and more. If you prefer to install these yourself, you can provide custom paths or disable them in your settings.";
-        await vscode.window.showInformationMessage(message, "Ok, continue");
+        const confirmed = await vscode.window.showInformationMessage(message, "Ok, continue");
+        if (!confirmed) {
+            await vscode.window.showWarningMessage("Only syntax highlighting will be available for Kotlin.");
+            return;
+        }
         await internalConfigManager.updateConfig({ initialized: true });
     }
 
