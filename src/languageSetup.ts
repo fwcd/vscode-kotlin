@@ -11,12 +11,13 @@ import { fsExists } from "./util/fsUtils";
 import { JarClassContentProvider } from "./jarClassContentProvider";
 
 /** Downloads and starts the language server. */
-export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status, customPath?: string) {
+export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status, config: vscode.WorkspaceConfiguration) {
     LOG.info('Activating Kotlin Language Server...');
     status.update("Activating Kotlin Language Server...");
     
     // Prepare language server
     const langServerInstallDir = path.join(context.globalStoragePath, "langServerInstall");
+    const customPath: string = config.get("languageServer.path");
     
     if (!customPath) {
         const langServerDownloader = new ServerDownloader("Kotlin Language Server", "kotlin-language-server", "server.zip", langServerInstallDir);

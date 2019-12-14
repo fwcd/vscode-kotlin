@@ -5,11 +5,12 @@ import { Status } from "./util/status";
 import { ServerDownloader } from "./serverDownloader";
 import { correctScriptName, isOSUnixoid } from "./util/osUtils";
 
-export async function registerDebugAdapter(context: vscode.ExtensionContext, status: Status, customPath?: string): Promise<void> {
+export async function registerDebugAdapter(context: vscode.ExtensionContext, status: Status, config: vscode.WorkspaceConfiguration): Promise<void> {
 	status.update("Registering Kotlin Debug Adapter...");
 	
 	// Prepare debug adapter
 	const debugAdapterInstallDir = path.join(context.globalStoragePath, "debugAdapterInstall");
+	const customPath: string = config.get("debugAdapter.path");
 	
 	if (!customPath) {
 		const debugAdapterDownloader = new ServerDownloader("Kotlin Debug Adapter", "kotlin-debug-adapter", "adapter.zip", debugAdapterInstallDir);
