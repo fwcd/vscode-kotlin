@@ -202,6 +202,12 @@
                     "default": "",
                     "description": "Optionally a custom path to the language server executable."
                 },
+                "kotlin.languageServer.transport": {
+                    "type": "string",
+                    "enum": ["stdio", "tcp"],
+                    "description": "The transport method used for the language server protocol",
+                    "default": "stdio"
+                },
                 "kotlin.trace.server": {
                     "type": "string",
                     "enum": [
