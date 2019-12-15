@@ -136,9 +136,9 @@ function createLanguageClient(options: {
             args: [],
             options: { cwd: vscode.workspace.rootPath } // TODO: Replace deprecated call
         }
+        LOG.info("Creating client at {}", options.startScriptPath);
     }
 
-    LOG.info("Creating client at {}", options.startScriptPath);
     return new LanguageClient("kotlin", "Kotlin Language Server", serverOptions, clientOptions);
 }
 
@@ -148,18 +148,21 @@ export function spawnLanguageServerProcessAndConnectViaTcp(options: {
     tcpPort?: number
 }): Promise<StreamInfo> {
     return new Promise((resolve, reject) => {
+        LOG.info("Creating server.")
         const server = net.createServer(socket => {
-            socket.on("end", () => {
-                // Close server since client has connected
-                server.close();
-                resolve({ reader: socket, writer: socket });
-            });
+            LOG.info("Closing server since client has connected.");
+            server.close();
+            resolve({ reader: socket, writer: socket });
         });
         // Wait for the first client to connect
         server.listen(options.tcpPort, () => {
-            const proc = child_process.spawn(options.startScriptPath, ["--tcpClientPort", (server.address() as net.AddressInfo).port.toString()]);
-            proc.stdout.on("data", data => options.outputChannel.append(data));
-            proc.stderr.on("data", data => options.outputChannel.append(data));
+            const tcpPort = (server.address() as net.AddressInfo).port.toString();
+            const proc = child_process.spawn(options.startScriptPath, ["--tcpClientPort", tcpPort]);
+            LOG.info("Creating client at {} via TCP port {}", options.startScriptPath, tcpPort);
+            
+            const outputCallback = data => options.outputChannel.append(`${data}`);
+            proc.stdout.on("data", outputCallback);
+            proc.stderr.on("data", outputCallback);
             proc.on("exit", (code, sig) => options.outputChannel.appendLine(`The language server exited, code: ${code}, signal: ${sig}`))
         });
     });
