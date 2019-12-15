@@ -2,7 +2,7 @@ import * as child_process from "child_process";
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from 'vscode';
-import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOptions } from "vscode-languageclient";
+import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOptions, TransportKind, Transport } from "vscode-languageclient";
 import { LOG } from './util/logger';
 import { isOSUnixoid, correctBinname, correctScriptName } from './util/osUtils';
 import { ServerDownloader } from './serverDownloader';
@@ -31,7 +31,6 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
         }
     }
     
-    status.update("Initializing Kotlin Language Server...");
     const javaExecutablePath = await findJavaExecutable('java');
 
     if (javaExecutablePath == null) {
@@ -41,9 +40,32 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
 
     const outputChannel = vscode.window.createOutputChannel("Kotlin");
     context.subscriptions.push(outputChannel);
+    
+    const transportLayer = config.get("languageServer.transport");
+    let transport: Transport;
+    let args: string[] = [];
+    let initStatusSuffix: string = "";
+
+    if (transportLayer == "tcp") {
+        const tcpPort: number = config.get("languageServer.port");
+
+        transport = { kind: TransportKind.socket, port: tcpPort };
+        initStatusSuffix = ` via port ${tcpPort}`;
+        args = ["--tcpClientPort", tcpPort.toString()];
+        
+        LOG.info(`Connecting via TCP, port: ${tcpPort}`);
+    } else if (transportLayer == "stdio") {
+        transport = TransportKind.stdio;
+
+        LOG.info("Connecting via Stdio.");
+    } else {
+        LOG.info(`Unknown transport layer: ${transportLayer}`);
+    }
+    
+    status.update(`Initializing Kotlin Language Server${initStatusSuffix}...`);
 
     const startScriptPath = customPath || path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
-    const options = { outputChannel, startScriptPath, args: [] };
+    const options = { outputChannel, startScriptPath, args, transport };
     const languageClient = createLanguageClient(options);
 
     // Create the language client and start the client.
@@ -71,7 +93,8 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
 function createLanguageClient(options: {
     outputChannel: vscode.OutputChannel,
     startScriptPath: string,
-    args: string[]
+    args: string[],
+    transport: Transport
 }): LanguageClient {
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
@@ -107,7 +130,8 @@ function createLanguageClient(options: {
     const serverOptions: ServerOptions = {
         command: options.startScriptPath,
         args: options.args,
-        options: { cwd: vscode.workspace.rootPath }
+        options: { cwd: vscode.workspace.rootPath },
+        transport: options.transport
     };
 
     LOG.info("Creating client {} with args {}", options.startScriptPath, options.args.join(' '));
