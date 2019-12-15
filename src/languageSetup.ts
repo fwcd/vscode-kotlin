@@ -165,6 +165,7 @@ export function spawnLanguageServerProcessAndConnectViaTcp(options: {
             proc.stderr.on("data", outputCallback);
             proc.on("exit", (code, sig) => options.outputChannel.appendLine(`The language server exited, code: ${code}, signal: ${sig}`))
         });
+        server.on("error", e => reject(e));
     });
 }
 
