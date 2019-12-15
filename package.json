@@ -210,8 +210,8 @@
                 },
                 "kotlin.languageServer.port": {
                     "type": "integer",
-                    "description": "The port to which the client will attempt to connect to. Only used if the transport layer is TCP.",
-                    "default": 49100
+                    "description": "The port to which the client will attempt to connect to. A random port is used if zero. Only used if the transport layer is TCP.",
+                    "default": 0
                 },
                 "kotlin.trace.server": {
                     "type": "string",

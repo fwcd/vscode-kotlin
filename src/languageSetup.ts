@@ -1,8 +1,9 @@
 import * as child_process from "child_process";
 import * as fs from "fs";
+import * as net from "net";
 import * as path from "path";
 import * as vscode from 'vscode';
-import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOptions, TransportKind, Transport } from "vscode-languageclient";
+import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOptions, StreamInfo } from "vscode-languageclient";
 import { LOG } from './util/logger';
 import { isOSUnixoid, correctBinname, correctScriptName } from './util/osUtils';
 import { ServerDownloader } from './serverDownloader';
@@ -42,21 +43,20 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     context.subscriptions.push(outputChannel);
     
     const transportLayer = config.get("languageServer.transport");
-    let transport: Transport;
-    let args: string[] = [];
+    let tcpPort: number = null;
     let initStatusSuffix: string = "";
 
     if (transportLayer == "tcp") {
-        const tcpPort: number = config.get("languageServer.port");
-
-        transport = { kind: TransportKind.socket, port: tcpPort };
-        initStatusSuffix = ` via port ${tcpPort}`;
-        args = ["--tcpClientPort", tcpPort.toString()];
+        tcpPort = config.get("languageServer.port");
+        
+        if (tcpPort == 0) {
+            initStatusSuffix = " via TCP";
+        } else {
+            initStatusSuffix = ` via TCP port ${tcpPort}`;
+        }
         
         LOG.info(`Connecting via TCP, port: ${tcpPort}`);
     } else if (transportLayer == "stdio") {
-        transport = TransportKind.stdio;
-
         LOG.info("Connecting via Stdio.");
     } else {
         LOG.info(`Unknown transport layer: ${transportLayer}`);
@@ -65,7 +65,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     status.update(`Initializing Kotlin Language Server${initStatusSuffix}...`);
 
     const startScriptPath = customPath || path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
-    const options = { outputChannel, startScriptPath, args, transport };
+    const options = { outputChannel, startScriptPath, tcpPort };
     const languageClient = createLanguageClient(options);
 
     // Create the language client and start the client.
@@ -93,8 +93,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
 function createLanguageClient(options: {
     outputChannel: vscode.OutputChannel,
     startScriptPath: string,
-    args: string[],
-    transport: Transport
+    tcpPort?: number
 }): LanguageClient {
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
@@ -126,16 +125,44 @@ function createLanguageClient(options: {
         child_process.exec(`chmod +x ${options.startScriptPath}`);
     }
 
-    // Start the child java process
-    const serverOptions: ServerOptions = {
-        command: options.startScriptPath,
-        args: options.args,
-        options: { cwd: vscode.workspace.rootPath },
-        transport: options.transport
-    };
+    // Start the child Java process
+    let serverOptions: ServerOptions;
+    
+    if (options.tcpPort) {
+        serverOptions = () => spawnLanguageServerProcessAndConnectViaTcp(options);
+    } else {
+        serverOptions = {
+            command: options.startScriptPath,
+            args: [],
+            options: { cwd: vscode.workspace.rootPath } // TODO: Replace deprecated call
+        }
+    }
 
-    LOG.info("Creating client {} with args {}", options.startScriptPath, options.args.join(' '));
+    LOG.info("Creating client at {}", options.startScriptPath);
     return new LanguageClient("kotlin", "Kotlin Language Server", serverOptions, clientOptions);
+}
+
+export function spawnLanguageServerProcessAndConnectViaTcp(options: {
+    outputChannel: vscode.OutputChannel,
+    startScriptPath: string,
+    tcpPort?: number
+}): Promise<StreamInfo> {
+    return new Promise((resolve, reject) => {
+        const server = net.createServer(socket => {
+            socket.on("end", () => {
+                // Close server since client has connected
+                server.close();
+                resolve({ reader: socket, writer: socket });
+            });
+        });
+        // Wait for the first client to connect
+        server.listen(options.tcpPort, () => {
+            const proc = child_process.spawn(options.startScriptPath, ["--tcpClientPort", (server.address() as net.AddressInfo).port.toString()]);
+            proc.stdout.on("data", data => options.outputChannel.append(data));
+            proc.stderr.on("data", data => options.outputChannel.append(data));
+            proc.on("exit", (code, sig) => options.outputChannel.appendLine(`The language server exited, code: ${code}, signal: ${sig}`))
+        });
+    });
 }
 
 export function configureLanguage(): void {
