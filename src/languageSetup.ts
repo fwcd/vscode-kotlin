@@ -139,7 +139,7 @@ function createLanguageClient(options: {
         LOG.info("Creating client at {}", options.startScriptPath);
     }
 
-    return new LanguageClient("kotlin", "Kotlin Language Server", serverOptions, clientOptions);
+    return new LanguageClient("kotlin", "Kotlin Language Client", serverOptions, clientOptions);
 }
 
 export function spawnLanguageServerProcessAndConnectViaTcp(options: {
