@@ -5,7 +5,7 @@
     "icon": "resources/Icon128.png",
     "repository": {
         "type": "git",
-        "url": "https://github.com/fwcd/vscode-kotlin-ide.git"
+        "url": "https://github.com/fwcd/vscode-kotlin.git"
     },
     "version": "0.2.11",
     "preview": true,
