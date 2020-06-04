@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to the Kotlin extension will be documented here.
 
+## [0.2.12]
+- Automatically detect updated Java sources
+
 ## [0.2.11]
 - Add support for TCP transport
 - Re-add support for Kotlin code blocks in Markdown
