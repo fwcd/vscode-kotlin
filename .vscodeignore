@@ -13,8 +13,8 @@ scripts/**
 lib/**
 gradle/**
 
-out/test/**
-out/**/*.map
+out/**
+node_modules/**
 bin/**
 build/**
 

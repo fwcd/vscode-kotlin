@@ -25,7 +25,7 @@
     "activationEvents": [
         "onLanguage:kotlin"
     ],
-    "main": "./out/extension",
+    "main": "./dist/extension",
     "contributes": {
         "languages": [
             {
@@ -279,7 +279,7 @@
     },
     "scripts": {
         "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
+        "watch": "webpack --mode development -w",
         "prepare": "node ./scripts/downloadGrammar.js",
         "postinstall": "node ./node_modules/vscode/bin/install",
         "vscode:prepublish": "webpack --mode production",

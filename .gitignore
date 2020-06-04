@@ -18,6 +18,7 @@ bin
 build
 target
 out
+dist
 __pycache__
 *.vsix
 
