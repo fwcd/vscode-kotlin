@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to the Kotlin extension will be documented here.
 
+## [0.2.14]
+- Fix unpacking issue
+
 ## [0.2.13]
 - Use Webpack to bundle files
 
