@@ -286,12 +286,12 @@
         "test": "node ./node_modules/vscode/bin/test"
     },
     "engines": {
-        "vscode": "^1.35.0"
+        "vscode": "^1.41.0"
     },
     "devDependencies": {
         "@types/extract-zip": "^1.6.2",
         "@types/mocha": "^7.0.2",
-        "@types/node": "^10.3.4",
+        "@types/node": "^12.8.1",
         "@types/semver": "^7.2.0",
         "@types/request-promise-native": "^1.0.17",
         "typescript": "^3.9.3",
