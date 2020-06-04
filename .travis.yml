@@ -19,11 +19,11 @@ deploy:
     name: "Version $TRAVIS_TAG"
     on:
       tags: true
-      repo: fwcd/vscode-kotlin-ide
+      repo: fwcd/vscode-kotlin
   - provider: script
     script: vsce publish -p $VSC_TOKEN
     skip_cleanup: true
     on:
       tags: true
-      repo: fwcd/vscode-kotlin-ide
+      repo: fwcd/vscode-kotlin
     
