@@ -9,6 +9,9 @@
 *.iml
 .DS_Store
 
+.vscode/**/*
+!.vscode/launch.json
+
 # Build files
 node_modules
 bin

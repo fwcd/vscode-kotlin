@@ -15,12 +15,14 @@ console.log("Downloading grammars...");
 request.get(GRAMMAR_URL)
 	.on("complete", () => {
 		console.log("Extracting grammars...");
-		extractZip(DOWNLOAD_PATH, { dir: EXTRACT_PATH }, err => {
-			if (err) console.log(err);
-			fs.unlink(DOWNLOAD_PATH, err => {
-				if (err) console.log(err);
-			});
-		});
+		extractZip(DOWNLOAD_PATH, { dir: EXTRACT_PATH })
+			.then(() => {
+				console.log("Cleaning up downloaded zip...");
+				fs.unlink(DOWNLOAD_PATH, err => {
+					if (err) console.log(err);
+				});
+			})
+			.catch(e => console.log(e));
 	})
 	.on("error", err => console.log(err))
 	.pipe(fs.createWriteStream(DOWNLOAD_PATH));
