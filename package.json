@@ -204,7 +204,10 @@
                 },
                 "kotlin.languageServer.transport": {
                     "type": "string",
-                    "enum": ["stdio", "tcp"],
+                    "enum": [
+                        "stdio",
+                        "tcp"
+                    ],
                     "description": "The transport layer beneath the language server protocol. Note that the extension will launch the server even if a TCP socket is used.",
                     "default": "stdio"
                 },
@@ -287,22 +290,22 @@
     },
     "devDependencies": {
         "@types/extract-zip": "^1.6.2",
-        "@types/mocha": "^5.2.3",
+        "@types/mocha": "^7.0.2",
         "@types/node": "^10.3.4",
-        "@types/semver": "^6.0.1",
-        "@types/request-promise-native": "^1.0.16",
-        "typescript": "^2.9.2",
-        "vsce": "1.64.0",
-        "vscode": "^1.1.36"
+        "@types/semver": "^7.2.0",
+        "@types/request-promise-native": "^1.0.17",
+        "typescript": "^3.9.3",
+        "vsce": "1.75.0",
+        "vscode": "^1.1.37"
     },
     "dependencies": {
-        "extract-zip": "^1.6.7",
-        "request": "^2.88.0",
+        "extract-zip": "^2.0.0",
+        "request": "^2.88.2",
         "request-progress": "^3.0.0",
-        "request-promise-native": "^1.0.7",
-        "semver": "^6.3.0",
-        "vscode-debugadapter": "^1.35.0",
-        "vscode-debugprotocol": "^1.35.0",
-        "vscode-languageclient": "^5.2.1"
+        "request-promise-native": "^1.0.8",
+        "semver": "^7.3.2",
+        "vscode-debugadapter": "^1.41.0",
+        "vscode-debugprotocol": "^1.41.0",
+        "vscode-languageclient": "^6.1.3"
     }
 }
