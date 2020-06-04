@@ -16,9 +16,9 @@ request.get(GRAMMAR_URL)
 	.on("complete", () => {
 		console.log("Extracting grammars...");
 		extractZip(DOWNLOAD_PATH, { dir: EXTRACT_PATH }, err => {
-			if (err) return console.log(err);
+			if (err) console.log(err);
 			fs.unlink(DOWNLOAD_PATH, err => {
-				if (err) return console.log(err);
+				if (err) console.log(err);
 			});
 		});
 	})
