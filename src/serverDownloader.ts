@@ -1,16 +1,13 @@
-import * as extractZipWithCallback from "extract-zip";
+import extractZip from "extract-zip";
 import * as path from "path";
 import * as semver from "semver";
 import * as requestPromise from "request-promise-native";
 import * as fs from "fs";
-import { promisify } from "util";
 import { fsExists } from "./util/fsUtils";
 import { GitHubReleasesAPIResponse } from "./githubApi";
 import { LOG } from "./util/logger";
 import { download } from "./util/downloadUtils";
 import { Status } from "./util/status";
-
-const extractZip = promisify(extractZipWithCallback);
 
 export interface ServerInfo {
 	version: string;
