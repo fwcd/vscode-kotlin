@@ -282,7 +282,9 @@
         "watch": "tsc -watch -p ./",
         "prepare": "node ./scripts/downloadGrammar.js",
         "postinstall": "node ./node_modules/vscode/bin/install",
-        "packageextension": "vsce package",
+        "vscode:prepublish": "webpack --mode production",
+        "package-extension": "vsce package",
+        "publish-extension": "vsce publish",
         "test": "node ./node_modules/vscode/bin/test"
     },
     "engines": {
@@ -292,11 +294,14 @@
         "@types/extract-zip": "^1.6.2",
         "@types/mocha": "^7.0.2",
         "@types/node": "^12.8.1",
-        "@types/semver": "^7.2.0",
         "@types/request-promise-native": "^1.0.17",
+        "@types/semver": "^7.2.0",
+        "ts-loader": "^7.0.5",
         "typescript": "^3.9.3",
         "vsce": "1.75.0",
-        "vscode": "^1.1.37"
+        "vscode": "^1.1.37",
+        "webpack": "^4.43.0",
+        "webpack-cli": "^3.3.11"
     },
     "dependencies": {
         "extract-zip": "^2.0.0",

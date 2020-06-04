@@ -6,8 +6,7 @@ script:
   - npm run compile
 
 before_deploy:
-  - npm install -g vsce
-  - vsce package
+  - npm run package-extension
 
 deploy:
   - provider: releases
@@ -21,7 +20,7 @@ deploy:
       tags: true
       repo: fwcd/vscode-kotlin
   - provider: script
-    script: vsce publish -p $VSC_TOKEN
+    script: npm run publish-extension -- -p $VSC_TOKEN
     skip_cleanup: true
     on:
       tags: true
