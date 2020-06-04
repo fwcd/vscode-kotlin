@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to the Kotlin extension will be documented here.
 
+## [0.2.13]
+- Use Webpack to bundle files
+
 ## [0.2.12]
 - Automatically detect updated Java sources
 
