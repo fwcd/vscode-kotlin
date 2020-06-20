@@ -45,6 +45,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     const transportLayer = config.get("languageServer.transport");
     let tcpPort: number = null;
     let initStatusSuffix: string = "";
+    let env: any = undefined;
 
     if (transportLayer == "tcp") {
         tcpPort = config.get("languageServer.port");
@@ -58,6 +59,14 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
         LOG.info(`Connecting via TCP, port: ${tcpPort}`);
     } else if (transportLayer == "stdio") {
         LOG.info("Connecting via Stdio.");
+
+        if (config.get("languageServer.debugAttach.enabled")) {
+            const autoSuspend = config.get("languageServer.debugAttach.autoSuspend");
+            const attachPort = config.get("languageServer.debugAttach.port");
+            env = {
+                KOTLIN_LANGUAGE_SERVER_OPTS: `-Xdebug -agentlib:jdwp=transport=dt_socket,address=${attachPort},server=y,quiet=y,suspend=${autoSuspend ? "y" : "n"}`
+            };
+        }
     } else {
         LOG.info(`Unknown transport layer: ${transportLayer}`);
     }
@@ -65,7 +74,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     status.update(`Initializing Kotlin Language Server${initStatusSuffix}...`);
 
     const startScriptPath = customPath || path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
-    const options = { outputChannel, startScriptPath, tcpPort };
+    const options = { outputChannel, startScriptPath, tcpPort, env };
     const languageClient = createLanguageClient(options);
 
     // Create the language client and start the client.
@@ -93,7 +102,8 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
 function createLanguageClient(options: {
     outputChannel: vscode.OutputChannel,
     startScriptPath: string,
-    tcpPort?: number
+    tcpPort?: number,
+    env?: any
 }): LanguageClient {
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
@@ -135,7 +145,10 @@ function createLanguageClient(options: {
         serverOptions = {
             command: options.startScriptPath,
             args: [],
-            options: { cwd: vscode.workspace.rootPath } // TODO: Replace deprecated call
+            options: {
+                cwd: vscode.workspace.rootPath,
+                env: options.env
+            } // TODO: Replace deprecated call
         }
         LOG.info("Creating client at {}", options.startScriptPath);
     }
