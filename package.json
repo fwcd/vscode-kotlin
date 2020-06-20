@@ -23,7 +23,8 @@
         "debugger"
     ],
     "activationEvents": [
-        "onLanguage:kotlin"
+        "onLanguage:kotlin",
+		"onDebug"
     ],
     "main": "./dist/extension",
     "contributes": {
