@@ -26,7 +26,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
         try {
             await langServerDownloader.downloadServerIfNeeded(status);
         } catch (error) {
-			console.error(error);
+            console.error(error);
             vscode.window.showWarningMessage(`Could not update/download Kotlin Language Server: ${error}`);
             return;
         }
@@ -213,48 +213,48 @@ export function configureLanguage(): void {
 }
 
 async function findJavaExecutable(rawBinname: string): Promise<string> {
-	let binname = correctBinname(rawBinname);
+    let binname = correctBinname(rawBinname);
 
-	// First search java.home setting
+    // First search java.home setting
     let userJavaHome = vscode.workspace.getConfiguration('java').get('home') as string;
 
-	if (userJavaHome != null) {
+    if (userJavaHome != null) {
         LOG.debug("Looking for Java in java.home (settings): {}", userJavaHome);
 
         let candidate = await findJavaExecutableInJavaHome(userJavaHome, binname);
 
         if (candidate != null)
             return candidate;
-	}
+    }
 
-	// Then search each JAVA_HOME
+    // Then search each JAVA_HOME
     let envJavaHome = process.env['JAVA_HOME'];
 
-	if (envJavaHome) {
+    if (envJavaHome) {
         LOG.debug("Looking for Java in JAVA_HOME (environment variable): {}", envJavaHome);
 
         let candidate = await findJavaExecutableInJavaHome(envJavaHome, binname);
 
         if (candidate != null)
             return candidate;
-	}
+    }
 
-	// Then search PATH parts
-	if (process.env['PATH']) {
+    // Then search PATH parts
+    if (process.env['PATH']) {
         LOG.debug("Looking for Java in PATH");
 
-		let pathparts = process.env['PATH'].split(path.delimiter);
-		for (let i = 0; i < pathparts.length; i++) {
-			let binpath = path.join(pathparts[i], binname);
-			if (fs.existsSync(binpath)) {
-				return binpath;
-			}
-		}
-	}
+        let pathparts = process.env['PATH'].split(path.delimiter);
+        for (let i = 0; i < pathparts.length; i++) {
+            let binpath = path.join(pathparts[i], binname);
+            if (fs.existsSync(binpath)) {
+                return binpath;
+            }
+        }
+    }
 
     // Else return the binary name directly (this will likely always fail downstream)
     LOG.debug("Could not find Java, will try using binary name directly");
-	return binname;
+    return binname;
 }
 
 async function findJavaExecutableInJavaHome(javaHome: string, binname: string): Promise<string> {
@@ -265,7 +265,7 @@ async function findJavaExecutableInJavaHome(javaHome: string, binname: string): 
 
         if (await fsExists(binpath))
             return binpath;
-	}
-	
-	return null;
+    }
+    
+    return null;
 }
