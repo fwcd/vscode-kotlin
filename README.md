@@ -6,7 +6,7 @@ Smart code completion, linting, debugging, formatting and more for Kotlin in VSC
 [![Downloads](https://img.shields.io/visual-studio-marketplace/d/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
 [![Installs](https://img.shields.io/visual-studio-marketplace/i/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
 
-To use, open a Kotlin file inside a Gradle or Maven project. The language server will then automatically launch in the background.
+To use, open a Kotlin file **inside a Gradle or Maven project**. Support for Kotlin source files with a standalone compiler (`kotlinc`) is experimental. The language server will then automatically launch in the background.
 
 ## Features
 * Code completion
