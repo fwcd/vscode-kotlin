@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to the Kotlin extension will be documented here.
 
+## [0.2.16]
+- Minor fixes
+
 ## [0.2.15]
 - Fix issue where debug adapter would not be initialized
 - Add `debugAttach` config options for simplifying debugging of the language server itself
