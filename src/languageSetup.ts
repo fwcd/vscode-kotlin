@@ -147,7 +147,8 @@ function createLanguageClient(options: {
             args: [],
             options: {
                 cwd: vscode.workspace.workspaceFolders?.[0]?.uri?.path,
-                env: options.env
+                env: options.env,
+                shell: true
             } // TODO: Support multi-root workspaces (and improve support for when no available is available)
         }
         LOG.info("Creating client at {}", options.startScriptPath);
