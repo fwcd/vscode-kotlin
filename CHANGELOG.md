@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to the Kotlin extension will be documented here.
 
-## [0.2.16]
+## [0.2.16], [0.2.17]
 - Minor fixes
 
 ## [0.2.15]
