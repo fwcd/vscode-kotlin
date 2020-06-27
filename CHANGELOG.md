@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to the Kotlin extension will be documented here.
 
+## [0.2.18]
+- Activate only if the user actually tries to debug a Kotlin application
+
 ## [0.2.16], [0.2.17]
 - Minor fixes
 
