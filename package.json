@@ -91,6 +91,11 @@
                                 "description": "The fully qualified name of your main class (usually your filename in PascalCase postfixed with Kt).",
                                 "default": "path.to.your.MainClassKt"
                             },
+                            "vmArguments": {
+                                "type": "string",
+                                "description": "The JVM arguments if your project needs (usually -Dfoo=bar).",
+                                "default": ""
+                            },
                             "enableJsonLogging": {
                                 "type": "boolean",
                                 "description": "Enables logging of debug server JSON messages into a file defined by 'jsonLogFile'.",
