@@ -94,7 +94,7 @@
                             },
                             "vmArguments": {
                                 "type": "string",
-                                "description": "The JVM arguments if your project needs (usually -Dfoo=bar).",
+                                "description": "The JVM arguments if needed by your project (usually -Dfoo=bar).",
                                 "default": ""
                             },
                             "enableJsonLogging": {
