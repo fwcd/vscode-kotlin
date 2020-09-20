@@ -1,6 +1,6 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Report an extension bug
+about: Something about the VSCode extension itself is not working
 title: ''
 labels: bug
 assignees: ''
