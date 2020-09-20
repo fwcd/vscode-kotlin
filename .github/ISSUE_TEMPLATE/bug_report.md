@@ -7,21 +7,11 @@ assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+### Description
+A clear and concise description of the bug and how to reproduce it.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
-
-**Expected behavior**
-A clear and concise description of what you expected to happen.
-
-**Extension version**
+### Extension version
 Which version of the VSCode extension you are running.
 
-**Additional context**
-Add any other context about the problem here.
+### Additional context
+More information or screenshots.

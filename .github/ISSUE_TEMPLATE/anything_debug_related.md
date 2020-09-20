@@ -1,10 +1,10 @@
 ---
-name: Anything related to debugging
-about: You are looking for https://github.com/fwcd/kotlin-debug-adapter
+name: Is it related to debugging?
+about: 'Please file the issue here: https://github.com/fwcd/kotlin-debug-adapter'
 title: ''
 labels: ''
 assignees: ''
 
 ---
 
-Please file the issue here: https://github.com/fwcd/kotlin-debug-adapter/issues
+**🚨 Please file the issue here instead: https://github.com/fwcd/kotlin-debug-adapter/issues**
