@@ -1,5 +1,5 @@
 ---
-name: Feature request
+name: Request an extension feature
 about: Suggest an idea for the VSCode extension
 title: ''
 labels: enhancement
