@@ -331,8 +331,11 @@
         "request-progress": "^3.0.0",
         "request-promise-native": "^1.0.8",
         "semver": "^7.3.2",
+        "tree-sitter-kotlin": "^0.2.4",
         "vscode-debugadapter": "^1.41.0",
         "vscode-debugprotocol": "^1.41.0",
-        "vscode-languageclient": "^6.1.3"
+        "vscode-languageclient": "^6.1.3",
+        "vscode-tree-sitter": "^0.1.24",
+        "web-tree-sitter": "^0.17.1"
     }
 }
