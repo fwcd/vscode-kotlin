@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 import { registerDebugAdapter } from './debugSetup';
 import { InternalConfigManager } from './internalConfig';
 import { activateLanguageServer, configureLanguage } from './languageSetup';
+import { activateTreeSitter } from './treeSitterSetup';
 import { fsExists } from './util/fsUtils';
 import { LOG } from './util/logger';
 import { Status, StatusBarEntry } from './util/status';
@@ -17,6 +18,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     const kotlinConfig = vscode.workspace.getConfiguration("kotlin");
     const langServerEnabled = kotlinConfig.get("languageServer.enabled");
     const debugAdapterEnabled = kotlinConfig.get("debugAdapter.enabled");
+    const treeSitterEnabled = kotlinConfig.get("treeSitter.enabled");
     
     if (!(await fsExists(context.globalStoragePath))) {
         await fs.promises.mkdir(context.globalStoragePath);
@@ -36,6 +38,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     }
 
     const initTasks: Promise<void>[] = [];
+
+    if (treeSitterEnabled) {
+        initTasks.push(withSpinningStatus(context, async status => {
+            await activateTreeSitter(context, status, kotlinConfig);
+        }));
+    } else {
+        LOG.info("Skipping treeSitter activation since 'kotlin.treeSitter.enabled' is false");
+    }
     
     if (langServerEnabled) {
         initTasks.push(withSpinningStatus(context, async status => {

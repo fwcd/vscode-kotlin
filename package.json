@@ -274,6 +274,11 @@
                     "default": "",
                     "description": "Optionally a custom path to the debug adapter executable."
                 },
+                "kotlin.treeSitter.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "[Recommended] Enables more precise syntax highlighting using Tree-Sitter"
+                },
                 "kotlin.treeSitter.path": {
                     "type": "string",
                     "default": "",
