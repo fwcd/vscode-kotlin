@@ -12,7 +12,7 @@ import { fsExists } from "./util/fsUtils";
 import { JarClassContentProvider } from "./jarClassContentProvider";
 
 /** Downloads and starts the language server. */
-export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status, config: vscode.WorkspaceConfiguration) {
+export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status, config: vscode.WorkspaceConfiguration): Promise<void> {
     LOG.info('Activating Kotlin Language Server...');
     status.update("Activating Kotlin Language Server...");
     
