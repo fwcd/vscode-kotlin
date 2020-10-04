@@ -23,8 +23,9 @@ To use, open a Kotlin file **inside a Gradle or Maven project**. Support for Kot
 ## Usage
 
 ### Development
+* To install the required dependencies, first run `npm install`
+* (Optional) To regenerate the WASM binary of the Kotlin grammar, run `npm run generate-parser`
 * To compile the extension continuously in the background, run `npm run watch`
-* To regenerate the WASM binary of the Kotlin grammar, run `npm run generate-parser`
 
 ### Debugging
 * Setup:
