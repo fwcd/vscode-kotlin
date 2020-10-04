@@ -300,7 +300,7 @@
         }
     },
     "scripts": {
-        "compile": "tsc -p ./",
+        "compile": "webpack --mode development",
         "watch": "webpack --mode development -w",
         "prepare": "node ./scripts/downloadGrammar.js",
         "postinstall": "node ./node_modules/vscode/bin/install",
