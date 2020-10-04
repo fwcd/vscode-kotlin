@@ -22,6 +22,10 @@ To use, open a Kotlin file **inside a Gradle or Maven project**. Support for Kot
 
 ## Usage
 
+### Development
+* To compile the extension continuously in the background, run `npm run watch`
+* To regenerate the WASM binary of the Kotlin grammar, run `npm run generate-parser`
+
 ### Debugging
 * Setup:
     * Open the `launch.json` file in your project and invoke code completion to create a new launch configuration (or select `Add Configuration...` in the debug tab)

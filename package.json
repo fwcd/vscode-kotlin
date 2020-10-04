@@ -307,7 +307,8 @@
         "vscode:prepublish": "webpack --mode production",
         "package-extension": "vsce package",
         "publish-extension": "vsce publish",
-        "test": "node ./node_modules/vscode/bin/test"
+        "test": "node ./node_modules/vscode/bin/test",
+        "generate-parser": "tree-sitter build-wasm ./node_modules/tree-sitter-kotlin"
     },
     "engines": {
         "vscode": "^1.41.0"
