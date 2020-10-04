@@ -274,6 +274,11 @@
                     "default": "",
                     "description": "Optionally a custom path to the debug adapter executable."
                 },
+                "kotlin.treeSitter.path": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Optionally a custom path to the tree-sitter-kotlin parser (a WASM binary)."
+                },
                 "kotlin.debounceTime": {
                     "type": "integer",
                     "default": 250,
