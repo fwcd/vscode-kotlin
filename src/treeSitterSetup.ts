@@ -62,32 +62,74 @@ function colorize(editor: vscode.TextEditor): void {
     }
 }
 
-function colorizeKotlin(root: wts.Tree, visibleRanges: { start: number, end: number }[]): { [scope: string]: wts.SyntaxNode[] } {
+function colorizeKotlin(tree: wts.Tree, visibleRanges: { start: number, end: number }[]): { [scope: string]: wts.SyntaxNode[] } {
     let colors: { [scope: string]: wts.SyntaxNode[] } = {};
-    for (const cursor of treeNodes(root)) {
-        // TODO
+
+    function add(scope: string, node: wts.SyntaxNode): void {
+        if (!colors[scope]) {
+            colors[scope] = [];
+        }
+        colors[scope]!.push(node);
     }
+
+    for (const node of treeNodes(tree.rootNode)) {
+        // Partly ported over from https://github.com/fwcd/atom-ide-kotlin/blob/master/grammars/tree-sitter-kotlin.cson
+
+        switch (node.type) {
+        case "simple_identifier":
+            switch (node.parent.type) {
+            case "type_identifier":
+                add("entity.name.type.kotlin", node);
+                break;
+            case "function_declaration":
+            case "call_expression":
+            case "infix_expression":
+                add("entity.name.function.kotlin", node);
+                break;
+            case "variable_declaration":
+                add("variable.kotlin", node);
+                break;
+            case "parameter":
+                add("variable.parameter.kotlin", node);
+                break;
+            default:
+                break;
+            }
+            break;
+        case "comment":
+            add("comment.kotlin", node);
+            break;
+        case "this_expression":
+        case "boolean_literal":
+        case '"null"':
+            add("constant.language", node);
+            break;
+        case "line_string_literal":
+        case "multi_line_string_literal":
+            add("string", node);
+            break;
+        case "interpolated_expression":
+            add("source.kotlin.embedded", node);
+            break;
+        case "interpolated_identifier":
+            add("entity.name", node);
+            break;
+        case "annotation":
+            add("meta.annotation", node);
+            break;
+        default:
+            break;
+        }
+    }
+
     return colors;
 }
 
-function* treeNodes(root: wts.Tree): Generator<wts.TreeCursor> {
-    const cursor = root.walk();
-    let visitedChildren = false;
-    while (true) {
-        if (visitedChildren) {
-            if (cursor.gotoNextSibling()) {
-                visitedChildren = false;
-                yield cursor;
-            } else if (!cursor.gotoParent()) {
-                break;
-            }
-        } else {
-            if (cursor.gotoFirstChild()) {
-                visitedChildren = false;
-                yield cursor;
-            } else {
-                visitedChildren = true;
-            }
-        }
+function* treeNodes(node: wts.SyntaxNode): Generator<wts.SyntaxNode> {
+    const count = node.childCount;
+    for (let i = 0; i < count; i++) {
+        const child = node.child(i);
+        yield child;
+        yield* treeNodes(child);
     }
 }
