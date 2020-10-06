@@ -6,7 +6,7 @@ import { fsExists } from './util/fsUtils';
 import { Status } from './util/status';
 
 export async function activateTreeSitter(context: vscode.ExtensionContext, status: Status, config: vscode.WorkspaceConfiguration): Promise<void> {
-    const parserPath: string = config.get("treeSitter.path") ?? path.join(context.extensionPath, "parsers", "tree-sitter-kotlin.wasm");
+    const parserPath: string = config.get("treeSitter.path") ?? path.join(__dirname, "parser", "tree-sitter-kotlin.wasm");
 
     if (!(await fsExists(parserPath))) {
         vscode.window.showWarningMessage("Could not initialize Tree-Sitter syntax highlighter for Kotlin.");
