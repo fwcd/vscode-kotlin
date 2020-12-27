@@ -1,9 +1,9 @@
 # Kotlin IDE for Visual Studio Code
-[![Version](https://img.shields.io/visual-studio-marketplace/v/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
-[![Build](https://github.com/fwcd/kotlin-debug-adapter/workflows/Build/badge.svg)](https://github.com/fwcd/kotlin-debug-adapter/actions)
-[![Downloads](https://img.shields.io/visual-studio-marketplace/d/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
-[![Installs](https://img.shields.io/visual-studio-marketplace/i/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
-[![Chat](https://img.shields.io/badge/chat-on%20discord-7289da)](https://discord.gg/cNtppzN)
+[![Version](https://raster.shields.io/visual-studio-marketplace/v/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
+[![Build](https://raster.shields.io/github/workflow/status/fwcd/vscode-kotlin/Build)](https://github.com/fwcd/kotlin-debug-adapter/actions)
+[![Downloads](https://raster.shields.io/visual-studio-marketplace/d/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
+[![Installs](https://raster.shields.io/visual-studio-marketplace/i/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
+[![Chat](https://raster.shields.io/badge/chat-on%20discord-7289da)](https://discord.gg/cNtppzN)
 
 Smart code completion, linting, debugging, formatting and more for Kotlin in VSCode using the [Kotlin language server](https://github.com/fwcd/kotlin-language-server) and the [Kotlin debug adapter](https://github.com/fwcd/kotlin-debug-adapter).
 
