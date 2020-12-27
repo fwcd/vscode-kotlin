@@ -1,0 +1,42 @@
+name: Deploy
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Install dependencies
+        run: npm install
+      - name: Build and package extension
+        run: npm run package-extension -- -o kotlin.vsix
+      - name: Create release
+        uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Version ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./kotlin.vsix
+          asset_name: kotlin-${{ github.ref }}.vsix
+          asset_content_type: application/zip
+      - name: Publish extension to VSC marketplace
+        run: npm run publish-extension -- -p $VSC_TOKEN
+        env:
+          VSC_TOKEN: ${{ secrets.VSC_TOKEN }}
