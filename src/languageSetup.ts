@@ -127,6 +127,7 @@ function createLanguageClient(options: {
                 vscode.workspace.createFileSystemWatcher('**/settings.gradle')
             ]
         },
+        progressOnInitialization: true,
         outputChannel: options.outputChannel,
         revealOutputChannelOn: RevealOutputChannelOn.Never
     }
