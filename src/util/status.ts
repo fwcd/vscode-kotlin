@@ -3,6 +3,8 @@ import * as vscode from "vscode";
 export interface Status {
     /** Updates the message. */
     update(msg: string): void;
+
+    dispose(): void;
 }
 
 /**
@@ -11,6 +13,7 @@ export interface Status {
 export class StatusBarEntry implements Status {
     private barItem: vscode.StatusBarItem;
     private prefix?: string;
+    private disposed: boolean = false;
     
     constructor(context: vscode.ExtensionContext, prefix?: string) {
         this.prefix = prefix;
@@ -27,6 +30,9 @@ export class StatusBarEntry implements Status {
     }
     
     dispose(): void {
-        this.barItem.dispose();
+        if (!this.disposed) {
+            this.disposed = true;
+            this.barItem.dispose();
+        }
     }
 }

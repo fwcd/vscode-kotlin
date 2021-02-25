@@ -44,17 +44,10 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     
     const transportLayer = config.get("languageServer.transport");
     let tcpPort: number = null;
-    let initStatusSuffix: string = "";
     let env: any = undefined;
 
     if (transportLayer == "tcp") {
         tcpPort = config.get("languageServer.port");
-        
-        if (tcpPort == 0) {
-            initStatusSuffix = " via TCP";
-        } else {
-            initStatusSuffix = ` via TCP port ${tcpPort}`;
-        }
         
         LOG.info(`Connecting via TCP, port: ${tcpPort}`);
     } else if (transportLayer == "stdio") {
@@ -70,9 +63,9 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     } else {
         LOG.info(`Unknown transport layer: ${transportLayer}`);
     }
-    
-    status.update(`Initializing Kotlin Language Server${initStatusSuffix}...`);
 
+    status.dispose();
+    
     const startScriptPath = customPath || path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
     const options = { outputChannel, startScriptPath, tcpPort, env };
     const languageClient = createLanguageClient(options);
