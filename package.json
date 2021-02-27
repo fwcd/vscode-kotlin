@@ -259,6 +259,11 @@
                     "default": 250,
                     "description": "[DEBUG] Specifies the debounce time limit. Lower to increase responsiveness at the cost of possibile stability issues."
                 },
+                "kotlin.indexing.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether global symbols in the project should be indexed automatically in the background. This enables e.g. code completion for unimported classes and functions."
+                },
                 "kotlin.completion.snippets.enabled": {
                     "type": "boolean",
                     "default": true,
