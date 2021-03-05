@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as net from "net";
 import * as path from "path";
 import * as vscode from 'vscode';
-import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOptions, StreamInfo } from "vscode-languageclient";
+import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOptions, StreamInfo } from "vscode-languageclient/node";
 import { LOG } from './util/logger';
 import { isOSUnixoid, correctBinname, correctScriptName } from './util/osUtils';
 import { ServerDownloader } from './serverDownloader';

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { LanguageClient } from "vscode-languageclient";
+import { LanguageClient } from "vscode-languageclient/node";
 import { JarClassContentsRequest } from "./lspExtensions";
 
 /**
