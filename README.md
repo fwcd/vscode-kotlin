@@ -12,6 +12,7 @@ To use, open a Kotlin file **inside a Gradle or Maven project**. Support for Kot
 ## Features
 * Code completion
 * Linting
+* Semantic highlighting
 * Debugging
 * Go-to-definition
 * Signature help
