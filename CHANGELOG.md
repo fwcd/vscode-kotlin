@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to the Kotlin extension will be documented here.
 
+## [0.2.23]
+- Support for semantic highlighting
+
 ## [0.2.22]
 - New `kotlin.indexing.enabled` option
 
