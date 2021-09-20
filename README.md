@@ -1,6 +1,6 @@
 # Kotlin IDE for Visual Studio Code
 [![Version](https://raster.shields.io/visual-studio-marketplace/v/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
-[![Build](https://raster.shields.io/github/workflow/status/fwcd/vscode-kotlin/Build)](https://github.com/fwcd/kotlin-debug-adapter/actions)
+[![Build](https://raster.shields.io/github/workflow/status/fwcd/vscode-kotlin/Build)](https://github.com/fwcd/vscode-kotlin/actions/workflows/build.yml)
 [![Downloads](https://raster.shields.io/visual-studio-marketplace/d/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
 [![Installs](https://raster.shields.io/visual-studio-marketplace/i/fwcd.kotlin)](https://marketplace.visualstudio.com/items?itemName=fwcd.kotlin)
 [![Chat](https://raster.shields.io/badge/chat-on%20discord-7289da)](https://discord.gg/cNtppzN)
