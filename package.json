@@ -230,7 +230,7 @@
                 },
                 "kotlin.languageServer.debugAttach.port": {
                     "type": "integer",
-                    "description": "[DEBUG] If transport is stdio this enables you to attach to the running langugage server with a debugger. This is ONLY useful if you need to debug the language server ITSELF.",
+                    "description": "[DEBUG] If transport is stdio this enables you to attach to the running language server with a debugger. This is ONLY useful if you need to debug the language server ITSELF.",
                     "default": 5005
                 },
                 "kotlin.languageServer.debugAttach.autoSuspend": {
@@ -257,7 +257,7 @@
                 "kotlin.linting.debounceTime": {
                     "type": "integer",
                     "default": 250,
-                    "description": "[DEBUG] Specifies the debounce time limit. Lower to increase responsiveness at the cost of possibile stability issues."
+                    "description": "[DEBUG] Specifies the debounce time limit. Lower to increase responsiveness at the cost of possible stability issues."
                 },
                 "kotlin.indexing.enabled": {
                     "type": "boolean",
@@ -282,7 +282,7 @@
                 "kotlin.debounceTime": {
                     "type": "integer",
                     "default": 250,
-                    "description": "[DEPRECATED] Specifies the debounce time limit. Lower to increase responsiveness at the cost of possibile stability issues.",
+                    "description": "[DEPRECATED] Specifies the debounce time limit. Lower to increase responsiveness at the cost of possible stability issues.",
                     "deprecationMessage": "Use 'kotlin.linting.debounceTime' instead"
                 },
                 "kotlin.externalSources.useKlsScheme": {
