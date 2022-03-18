@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { registerDebugAdapter } from './debugSetup';
 import { InternalConfigManager } from './internalConfig';
+import { verifyJavaIsAvailable } from './javaSetup';
 import { activateLanguageServer, configureLanguage } from './languageSetup';
 import { fsExists } from './util/fsUtils';
 import { LOG } from './util/logger';
@@ -36,6 +37,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     }
 
     const initTasks: Promise<void>[] = [];
+
+    if (!(await verifyJavaIsAvailable())) {
+        return;
+    }
     
     if (langServerEnabled) {
         initTasks.push(withSpinningStatus(context, async status => {
