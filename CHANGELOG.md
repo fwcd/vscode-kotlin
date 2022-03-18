@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to the Kotlin extension will be documented here.
 
+## [0.2.24]
+- New icon
+- Note above JDK
+- Minor fixes
+
 ## [0.2.23]
 - Support for semantic highlighting
 
