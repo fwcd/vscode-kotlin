@@ -68,9 +68,9 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     
     const startScriptPath = customPath || path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
 
-    const storagePath = context.storagePath
-    if (!fs.existsSync(storagePath)){
-        fs.mkdirSync(storagePath);
+    const storagePath = context.storageUri.fsPath
+    if (!(await fsExists(storagePath))) {
+        await fs.promises.mkdir(storagePath);
     }
 
     const options = { outputChannel, startScriptPath, tcpPort, env, storagePath };
