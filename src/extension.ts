@@ -5,7 +5,7 @@ import * as vscode from 'vscode';
 import { registerDebugAdapter } from './debugSetup';
 import { InternalConfigManager } from './internalConfig';
 import { verifyJavaIsAvailable } from './javaSetup';
-import { activateLanguageServer, configureLanguage, KotlinAPI } from './languageSetup';
+import { activateLanguageServer, configureLanguage, KotlinApi } from './languageSetup';
 import { fsExists } from './util/fsUtils';
 import { LOG } from './util/logger';
 import { Status, StatusBarEntry } from './util/status';
@@ -78,13 +78,13 @@ export function deactivate(): void {}
 
 class ExtensionAPI {
 
-    private kotlinApi?: KotlinAPI;
+    private kotlinApi?: KotlinApi;
 
-    constructor(kotlinApi: KotlinAPI) {
+    constructor(kotlinApi: KotlinApi) {
         this.kotlinApi = kotlinApi;
     }
 
-    getBuildOutputPath(): string {
-        return this.kotlinApi?.getBuildOutputPath();
+    get buildOutputPath(): string {
+        return this.kotlinApi?.buildOutputLocation;
     }
 }

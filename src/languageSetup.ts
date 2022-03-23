@@ -8,9 +8,10 @@ import { isOSUnixoid, correctScriptName } from './util/osUtils';
 import { ServerDownloader } from './serverDownloader';
 import { Status } from "./util/status";
 import { JarClassContentProvider } from "./jarClassContentProvider";
+import { setupCustomClientRequests } from "./lspExtensions";
 
 /** Downloads and starts the language server. */
-export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status, config: vscode.WorkspaceConfiguration): Promise<KotlinAPI> {
+export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status, config: vscode.WorkspaceConfiguration): Promise<KotlinApi> {
     LOG.info('Activating Kotlin Language Server...');
     status.update("Activating Kotlin Language Server...");
     
@@ -57,7 +58,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
 
     status.dispose();
 
-    let kotlinApi: KotlinAPI = new KotlinAPI();
+    let kotlinApi: KotlinApi = {};
     
     const startScriptPath = customPath || path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
     const options = { outputChannel, startScriptPath, tcpPort, env, kotlinApi };
@@ -84,7 +85,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
 
     await languageClient.onReady();
 
-    languageClient.onNotification("kotlin/buildOutputLocationSet", (buildOutputLocation: string) => kotlinApi.setBuildOutputPath(buildOutputLocation));
+    setupCustomClientRequests(languageClient, kotlinApi);
 
     return kotlinApi;
 }
@@ -216,14 +217,6 @@ export function configureLanguage(): void {
     });
 }
 
-export class KotlinAPI {
-    private buildOutputLocation: string;
-
-    setBuildOutputPath(buildOutputLocation: string) {
-        this.buildOutputLocation = buildOutputLocation;
-    }
-
-    getBuildOutputPath(): string {
-        return this.buildOutputLocation;
-    }
+export interface KotlinApi {
+    buildOutputLocation?: string;
 }
