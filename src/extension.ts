@@ -5,14 +5,14 @@ import * as vscode from 'vscode';
 import { registerDebugAdapter } from './debugSetup';
 import { InternalConfigManager } from './internalConfig';
 import { verifyJavaIsAvailable } from './javaSetup';
-import { activateLanguageServer, configureLanguage } from './languageSetup';
+import { activateLanguageServer, configureLanguage, KotlinAPI } from './languageSetup';
 import { fsExists } from './util/fsUtils';
 import { LOG } from './util/logger';
 import { Status, StatusBarEntry } from './util/status';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export async function activate(context: vscode.ExtensionContext): Promise<void> {
+export async function activate(context: vscode.ExtensionContext): Promise<ExtensionAPI> {
     configureLanguage();
 
     const kotlinConfig = vscode.workspace.getConfiguration("kotlin");
@@ -41,10 +41,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     if (!(await verifyJavaIsAvailable())) {
         return;
     }
+
+    let extensionApi: ExtensionAPI = new ExtensionAPI(null);
     
     if (langServerEnabled) {
         initTasks.push(withSpinningStatus(context, async status => {
-            await activateLanguageServer(context, status, kotlinConfig);
+            const kotlinApi = await activateLanguageServer(context, status, kotlinConfig);
+            extensionApi = new ExtensionAPI(kotlinApi);
         }));
     } else {
         LOG.info("Skipping language server activation since 'kotlin.languageServer.enabled' is false");
@@ -59,6 +62,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     }
     
     await Promise.all(initTasks);
+
+    return extensionApi;
 }
 
 async function withSpinningStatus(context: vscode.ExtensionContext, action: (status: Status) => Promise<void>): Promise<void> {
@@ -70,3 +75,16 @@ async function withSpinningStatus(context: vscode.ExtensionContext, action: (sta
 
 // this method is called when your extension is deactivated
 export function deactivate(): void {}
+
+class ExtensionAPI {
+
+    private kotlinApi?: KotlinAPI;
+
+    constructor(kotlinApi: KotlinAPI) {
+        this.kotlinApi = kotlinApi;
+    }
+
+    getBuildOutputPath(): string {
+        return this.kotlinApi?.getBuildOutputPath();
+    }
+}
