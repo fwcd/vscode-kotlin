@@ -5,7 +5,8 @@ import * as vscode from 'vscode';
 import { registerDebugAdapter } from './debugSetup';
 import { InternalConfigManager } from './internalConfig';
 import { verifyJavaIsAvailable } from './javaSetup';
-import { activateLanguageServer, configureLanguage, KotlinApi } from './languageSetup';
+import { activateLanguageServer, configureLanguage } from './languageSetup';
+import { KotlinApi } from './lspExtensions';
 import { fsExists } from './util/fsUtils';
 import { LOG } from './util/logger';
 import { Status, StatusBarEntry } from './util/status';
@@ -84,7 +85,7 @@ class ExtensionAPI {
         this.kotlinApi = kotlinApi;
     }
 
-    get buildOutputPath(): string {
-        return this.kotlinApi?.buildOutputLocation;
+    async getBuildOutputPath(): Promise<string> {
+        return await this.kotlinApi?.getBuildOutputLocation();
     }
 }

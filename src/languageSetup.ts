@@ -8,7 +8,7 @@ import { isOSUnixoid, correctScriptName } from './util/osUtils';
 import { ServerDownloader } from './serverDownloader';
 import { Status } from "./util/status";
 import { JarClassContentProvider } from "./jarClassContentProvider";
-import { setupCustomClientRequests } from "./lspExtensions";
+import { KotlinApi } from "./lspExtensions";
 
 /** Downloads and starts the language server. */
 export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status, config: vscode.WorkspaceConfiguration): Promise<KotlinApi> {
@@ -57,11 +57,9 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     }
 
     status.dispose();
-
-    let kotlinApi: KotlinApi = {};
     
     const startScriptPath = customPath || path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
-    const options = { outputChannel, startScriptPath, tcpPort, env, kotlinApi };
+    const options = { outputChannel, startScriptPath, tcpPort, env };
     const languageClient = createLanguageClient(options);
 
     // Create the language client and start the client.
@@ -85,9 +83,7 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
 
     await languageClient.onReady();
 
-    setupCustomClientRequests(languageClient, kotlinApi);
-
-    return kotlinApi;
+    return new KotlinApi(languageClient);
 }
 
 function createLanguageClient(options: {
@@ -215,8 +211,4 @@ export function configureLanguage(): void {
             }
         ]
     });
-}
-
-export interface KotlinApi {
-    buildOutputLocation?: string;
 }
