@@ -308,11 +308,9 @@
         "compile": "tsc -p ./",
         "watch": "webpack --mode development -w",
         "prepare": "node ./scripts/downloadGrammar.js",
-        "postinstall": "node ./node_modules/vscode/bin/install",
         "vscode:prepublish": "webpack --mode production",
         "package-extension": "vsce package",
-        "publish-extension": "vsce publish",
-        "test": "node ./node_modules/vscode/bin/test"
+        "publish-extension": "vsce publish"
     },
     "engines": {
         "vscode": "^1.52.0"
@@ -323,10 +321,10 @@
         "@types/node": "^12.8.1",
         "@types/request-promise-native": "^1.0.17",
         "@types/semver": "^7.3.6",
+        "@types/vscode": "^1.66.0",
         "ts-loader": "^9.2.3",
         "typescript": "^4.3.5",
         "vsce": "^1.95.0",
-        "vscode": "^1.1.37",
         "webpack": "^5.41.1",
         "webpack-cli": "^4.7.2"
     },
