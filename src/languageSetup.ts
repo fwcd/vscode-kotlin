@@ -1,4 +1,5 @@
 import * as child_process from "child_process";
+import * as fs from "fs";
 import * as net from "net";
 import * as path from "path";
 import * as vscode from 'vscode';
@@ -8,6 +9,7 @@ import { isOSUnixoid, correctScriptName } from './util/osUtils';
 import { ServerDownloader } from './serverDownloader';
 import { Status } from "./util/status";
 import { JarClassContentProvider } from "./jarClassContentProvider";
+import { fsExists } from "./util/fsUtils";
 
 /** Downloads and starts the language server. */
 export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status, config: vscode.WorkspaceConfiguration) {
