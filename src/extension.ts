@@ -20,11 +20,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
     const langServerEnabled = kotlinConfig.get("languageServer.enabled");
     const debugAdapterEnabled = kotlinConfig.get("debugAdapter.enabled");
     
-    if (!(await fsExists(context.globalStoragePath))) {
-        await fs.promises.mkdir(context.globalStoragePath);
+    const globalStoragePath = context.globalStorageUri.fsPath;
+    if (!(await fsExists(globalStoragePath))) {
+        await fs.promises.mkdir(globalStoragePath);
     }
     
-    const internalConfigPath = path.join(context.globalStoragePath, "config.json");
+    const internalConfigPath = path.join(globalStoragePath, "config.json");
     const internalConfigManager = await InternalConfigManager.loadingConfigFrom(internalConfigPath);
     
     if (!internalConfigManager.getConfig().initialized) {
