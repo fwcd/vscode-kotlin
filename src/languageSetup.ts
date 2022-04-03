@@ -58,7 +58,13 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     status.dispose();
     
     const startScriptPath = customPath || path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
-    const options = { outputChannel, startScriptPath, tcpPort, env };
+
+    const storagePath = context.storageUri.fsPath
+    if (!(await fsExists(storagePath))) {
+        await fs.promises.mkdir(storagePath);
+    }
+
+    const options = { outputChannel, startScriptPath, tcpPort, env, storagePath };
     const languageClient = createLanguageClient(options);
 
     // Create the language client and start the client.
@@ -87,7 +93,8 @@ function createLanguageClient(options: {
     outputChannel: vscode.OutputChannel,
     startScriptPath: string,
     tcpPort?: number,
-    env?: any
+    env?: any,
+    storagePath: string
 }): LanguageClient {
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
@@ -113,7 +120,10 @@ function createLanguageClient(options: {
         },
         progressOnInitialization: true,
         outputChannel: options.outputChannel,
-        revealOutputChannelOn: RevealOutputChannelOn.Never
+        revealOutputChannelOn: RevealOutputChannelOn.Never,
+        initializationOptions: {
+            storagePath: options.storagePath
+        }
     }
     
     // Ensure that start script can be executed
