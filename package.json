@@ -292,7 +292,7 @@
                 },
                 "kotlin.externalSources.autoConvertToKotlin": {
                     "type": "boolean",
-                    "default": true,
+                    "default": false,
                     "description": "Specifies whether decompiled/external classes should be auto-converted to Kotlin."
                 },
                 "kotlin.snippetsEnabled": {
