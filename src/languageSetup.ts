@@ -94,36 +94,36 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
     const debugAdapterEnabled = kotlinConfig.get("debugAdapter.enabled");
     if(debugAdapterEnabled) {
         vscode.languages.registerCodeLensProvider("kotlin", new RunDebugCodeLens())
-    }
     
-    vscode.commands.registerCommand("kotlin.resolveMain", async(fileUri) => {
-        return await languageClient.sendRequest("workspace/executeCommand", {
-            command: "resolveMain",
-            arguments: [fileUri]
+        vscode.commands.registerCommand("kotlin.resolveMain", async(fileUri) => {
+            return await languageClient.sendRequest("workspace/executeCommand", {
+                command: "resolveMain",
+                arguments: [fileUri]
+            })
         })
-    })
     
-    // TODO: maybe the settings can be persisted in a launch.json?
-    vscode.commands.registerCommand("kotlin.runMain", async(mainClass, projectRoot) => {
-        vscode.debug.startDebugging(vscode.workspace.getWorkspaceFolder(vscode.Uri.file(projectRoot)), {
-            type: "kotlin",
-            name: "Run Kotlin main",
-            request: "launch",
-            noDebug: true,
-            mainClass,
-            projectRoot,
-        }) 
-    });
-
-    vscode.commands.registerCommand("kotlin.debugMain", async(mainClass, projectRoot) => {
-        vscode.debug.startDebugging(vscode.workspace.getWorkspaceFolder(vscode.Uri.file(projectRoot)), {
-            type: "kotlin",
-            name: "Debug Kotlin main",
-            request: "launch",
-            mainClass,
-            projectRoot,
-        }) 
-    });
+        // TODO: maybe the settings can be persisted in a launch.json?
+        vscode.commands.registerCommand("kotlin.runMain", async(mainClass, projectRoot) => {
+            vscode.debug.startDebugging(vscode.workspace.getWorkspaceFolder(vscode.Uri.file(projectRoot)), {
+                type: "kotlin",
+                name: "Run Kotlin main",
+                request: "launch",
+                noDebug: true,
+                mainClass,
+                projectRoot,
+            }) 
+        });
+        
+        vscode.commands.registerCommand("kotlin.debugMain", async(mainClass, projectRoot) => {
+            vscode.debug.startDebugging(vscode.workspace.getWorkspaceFolder(vscode.Uri.file(projectRoot)), {
+                type: "kotlin",
+                name: "Debug Kotlin main",
+                request: "launch",
+                mainClass,
+                projectRoot,
+            }) 
+        });
+    }
 
     await languageClient.onReady();
 }
