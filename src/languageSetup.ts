@@ -102,7 +102,6 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
             })
         })
     
-        // TODO: maybe the settings can be persisted in a launch.json?
         vscode.commands.registerCommand("kotlin.runMain", async(mainClass, projectRoot) => {
             vscode.debug.startDebugging(vscode.workspace.getWorkspaceFolder(vscode.Uri.file(projectRoot)), {
                 type: "kotlin",
