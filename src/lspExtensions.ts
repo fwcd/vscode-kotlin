@@ -14,6 +14,6 @@ export class KotlinApi {
     }
 
     async getBuildOutputLocation(): Promise<string> {
-        return await this.client.sendRequest("kotlin/getBuildOutputLocation");
+        return await this.client.sendRequest("kotlin/buildOutputLocation");
     }
 }
