@@ -13,7 +13,7 @@ import { Status, StatusBarEntry } from './util/status';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export async function activate(context: vscode.ExtensionContext): Promise<ExtensionAPI> {
+export async function activate(context: vscode.ExtensionContext): Promise<ExtensionApi> {
     configureLanguage();
 
     const kotlinConfig = vscode.workspace.getConfiguration("kotlin");
@@ -44,12 +44,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
         return;
     }
 
-    let extensionApi: ExtensionAPI = new ExtensionAPI(null);
+    let extensionApi: ExtensionApi = new ExtensionApi(null);
     
     if (langServerEnabled) {
         initTasks.push(withSpinningStatus(context, async status => {
             const kotlinApi = await activateLanguageServer(context, status, kotlinConfig);
-            extensionApi = new ExtensionAPI(kotlinApi);
+            extensionApi = new ExtensionApi(kotlinApi);
         }));
     } else {
         LOG.info("Skipping language server activation since 'kotlin.languageServer.enabled' is false");
