@@ -6,6 +6,10 @@ export namespace JarClassContentsRequest {
     export const type = new RequestType<TextDocumentIdentifier, string, void>("kotlin/jarClassContents");
 }
 
+export namespace BuildOutputLocationRequest {
+    export const type = new RequestType0<string, void>("kotlin/buildOutputLocation");
+}
+
 export class KotlinApi {
     private client: LanguageClient;
 
@@ -14,6 +18,6 @@ export class KotlinApi {
     }
 
     async getBuildOutputLocation(): Promise<string> {
-        return await this.client.sendRequest("kotlin/buildOutputLocation");
+        return await this.client.sendRequest(BuildOutputLocationRequest.type);
     }
 }
