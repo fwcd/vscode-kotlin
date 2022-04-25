@@ -11,6 +11,7 @@ import { Status } from "./util/status";
 import { JarClassContentProvider } from "./jarClassContentProvider";
 import { fsExists } from "./util/fsUtils";
 import { RunDebugCodeLens } from "./RunDebugCodeLens";
+import { MainClassRequest } from "./lspExtensions";
 
 /** Downloads and starts the language server. */
 export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status, config: vscode.WorkspaceConfiguration) {
@@ -96,9 +97,8 @@ export async function activateLanguageServer(context: vscode.ExtensionContext, s
         vscode.languages.registerCodeLensProvider("kotlin", new RunDebugCodeLens())
     
         vscode.commands.registerCommand("kotlin.resolveMain", async(fileUri) => {
-            return await languageClient.sendRequest("workspace/executeCommand", {
-                command: "resolveMain",
-                arguments: [fileUri]
+            return await languageClient.sendRequest(MainClassRequest.type, {
+                uri: fileUri
             })
         })
     
