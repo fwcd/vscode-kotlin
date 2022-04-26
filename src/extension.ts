@@ -37,8 +37,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
         await internalConfigManager.updateConfig({ initialized: true });
 
         if (!result || result === disableButton) {
-            await kotlinConfig.update("languageServer.enabled", false, true);
-            await kotlinConfig.update("debugAdapter.enabled", false, true);
+            await kotlinConfig.update("languageServer.enabled", false, vscode.ConfigurationTarget.Global);
+            await kotlinConfig.update("debugAdapter.enabled", false, vscode.ConfigurationTarget.Global);
 
             // these values are not yet updated even if we move the above get-calls down. Works the next time the extension is opened
             langServerEnabled = false;
