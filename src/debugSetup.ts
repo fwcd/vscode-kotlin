@@ -31,7 +31,9 @@ export async function registerDebugAdapter({ context, status, config, javaInstal
         child_process.exec(`chmod +x ${startScriptPath}`);
     }
     
-    vscode.debug.registerDebugAdapterDescriptorFactory("kotlin", new KotlinDebugAdapterDescriptorFactory(startScriptPath));
+    vscode.debug.registerDebugAdapterDescriptorFactory("kotlin", new KotlinDebugAdapterDescriptorFactory(startScriptPath, {
+        JAVA_HOME: javaInstallation.javaHome
+    }));
 }
 
 /**
@@ -39,13 +41,14 @@ export async function registerDebugAdapter({ context, status, config, javaInstal
  * to the Kotlin debug adapter start script.
  */
 export class KotlinDebugAdapterDescriptorFactory implements vscode.DebugAdapterDescriptorFactory {
-    private startScriptPath: string;
-    
-    public constructor(startScriptPath: string) {
-        this.startScriptPath = startScriptPath;
-    }
+    public constructor(
+        private startScriptPath: string,
+        private env?: any
+    ) {}
     
     async createDebugAdapterDescriptor(session: vscode.DebugSession, executable: vscode.DebugAdapterExecutable | undefined): Promise<vscode.DebugAdapterDescriptor> {
-        return new vscode.DebugAdapterExecutable(this.startScriptPath);
+        return new vscode.DebugAdapterExecutable(this.startScriptPath, null, {
+            env: this.env
+        });
     }
 }

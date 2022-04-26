@@ -38,7 +38,9 @@ export async function activateLanguageServer({ context, status, config, javaInst
     
     const transportLayer = config.get("languageServer.transport");
     let tcpPort: number = null;
-    let env: any = undefined;
+    let env: any = {
+        JAVA_HOME: javaInstallation.javaHome
+    };
 
     if (transportLayer == "tcp") {
         tcpPort = config.get("languageServer.port");
@@ -50,9 +52,7 @@ export async function activateLanguageServer({ context, status, config, javaInst
         if (config.get("languageServer.debugAttach.enabled")) {
             const autoSuspend = config.get("languageServer.debugAttach.autoSuspend");
             const attachPort = config.get("languageServer.debugAttach.port");
-            env = {
-                KOTLIN_LANGUAGE_SERVER_OPTS: `-Xdebug -agentlib:jdwp=transport=dt_socket,address=${attachPort},server=y,quiet=y,suspend=${autoSuspend ? "y" : "n"}`
-            };
+            env['KOTLIN_LANGUAGE_SERVER_OPTS'] = `-Xdebug -agentlib:jdwp=transport=dt_socket,address=${attachPort},server=y,quiet=y,suspend=${autoSuspend ? "y" : "n"}`;
         }
     } else {
         LOG.info(`Unknown transport layer: ${transportLayer}`);
