@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { registerDebugAdapter } from './debugSetup';
 import { InternalConfigManager } from './internalConfig';
-import { verifyJavaIsAvailable } from './javaSetup';
+import { findJavaInstallation, verifyJavaIsAvailable } from './javaSetup';
 import { activateLanguageServer, configureLanguage } from './languageSetup';
 import { KotlinApi } from './lspExtensions';
 import { fsExists } from './util/fsUtils';
@@ -50,9 +50,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
     }
 
     const initTasks: Promise<void>[] = [];
-    const javaInstallation = await verifyJavaIsAvailable();
+    const javaInstallation = await findJavaInstallation();
 
     if (!javaInstallation) {
+        await vscode.window.showWarningMessage("Could neither locate Java in JAVA_HOME, on PATH nor in kotlin.java.home!");
         return;
     }
 

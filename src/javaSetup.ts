@@ -5,38 +5,19 @@ import { correctBinname } from './util/osUtils';
 import { fsExists } from "./util/fsUtils";
 import { LOG } from './util/logger';
 
-interface JavaInstallation {
+export interface JavaInstallation {
     javaExecutable: string;
     javaHome?: string;
 }
 
-export async function verifyJavaIsAvailable(): Promise<JavaInstallation | null> {
-    let javaInstallation: JavaInstallation;
-
-    try {
-        javaInstallation = await findJavaInstallation();
-    } catch (error) {
-        console.error(error);
-        vscode.window.showErrorMessage(`Could not locate Java: ${error}`)
-        return null;
-    }
-
-    if (!javaInstallation) {
-        vscode.window.showErrorMessage("Couldn't locate java in $JAVA_HOME or $PATH");
-        return null;
-    }
-
-    return javaInstallation;
-}
-
-async function findJavaInstallation(): Promise<JavaInstallation> {
+export async function findJavaInstallation(): Promise<JavaInstallation> {
     let binname = correctBinname('java');
 
     // First search java.home setting
     let userJavaHome = vscode.workspace.getConfiguration('kotlin').get('java.home') as string;
 
     if (userJavaHome) {
-        LOG.debug("Looking for Java in java.home (settings): {}", userJavaHome);
+        LOG.debug("Looking for Java in kotlin.java.home (settings): {}", userJavaHome);
 
         let candidate = await findJavaExecutableInJavaHome(userJavaHome, binname);
 
