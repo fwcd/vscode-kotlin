@@ -18,7 +18,7 @@ export async function activateLanguageServer({ context, status, config, javaInst
     status.update("Activating Kotlin Language Server...");
     
     // Prepare language server
-    const langServerInstallDir = path.join(context.globalStoragePath, "langServerInstall");
+    const langServerInstallDir = path.join(context.globalStorageUri.fsPath, "langServerInstall");
     const customPath: string = config.get("languageServer.path");
     
     if (!customPath) {

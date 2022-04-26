@@ -9,7 +9,7 @@ export async function registerDebugAdapter({ context, status, config, javaInstal
     status.update("Registering Kotlin Debug Adapter...");
     
     // Prepare debug adapter
-    const debugAdapterInstallDir = path.join(context.globalStoragePath, "debugAdapterInstall");
+    const debugAdapterInstallDir = path.join(context.globalStorageUri.fsPath, "debugAdapterInstall");
     const customPath: string = config.get("debugAdapter.path");
     
     if (!customPath) {
