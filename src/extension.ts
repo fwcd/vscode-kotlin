@@ -54,12 +54,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
         return;
     }
 
-    let extensionApi: ExtensionApi = new ExtensionApi(null);
+    let extensionApi = new ExtensionApi();
     
     if (langServerEnabled) {
         initTasks.push(withSpinningStatus(context, async status => {
-            const kotlinApi = await activateLanguageServer(context, status, kotlinConfig);
-            extensionApi = new ExtensionApi(kotlinApi);
+            extensionApi.kotlinApi = await activateLanguageServer(context, status, kotlinConfig);
         }));
     } else {
         LOG.info("Skipping language server activation since 'kotlin.languageServer.enabled' is false");
@@ -89,12 +88,7 @@ async function withSpinningStatus(context: vscode.ExtensionContext, action: (sta
 export function deactivate(): void {}
 
 class ExtensionApi {
-
-    private kotlinApi?: KotlinApi;
-
-    constructor(kotlinApi: KotlinApi) {
-        this.kotlinApi = kotlinApi;
-    }
+    kotlinApi?: KotlinApi;
 
     async getBuildOutputPath(): Promise<string> {
         return await this.kotlinApi?.getBuildOutputLocation();
