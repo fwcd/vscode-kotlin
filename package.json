@@ -199,6 +199,11 @@
         "configuration": {
             "title": "Kotlin",
             "properties": {
+                "kotlin.java.home": {
+                    "type": "string",
+                    "default": "",
+                    "description": "A custom JAVA_HOME for the language server and debug adapter to use."
+                },
                 "kotlin.languageServer.enabled": {
                     "type": "boolean",
                     "default": true,
