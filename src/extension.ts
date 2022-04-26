@@ -17,8 +17,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
     configureLanguage();
 
     const kotlinConfig = vscode.workspace.getConfiguration("kotlin");
-    const langServerEnabled = kotlinConfig.get("languageServer.enabled");
-    const debugAdapterEnabled = kotlinConfig.get("debugAdapter.enabled");
+    let langServerEnabled = kotlinConfig.get("languageServer.enabled");
+    let debugAdapterEnabled = kotlinConfig.get("debugAdapter.enabled");
     
     const globalStoragePath = context.globalStorageUri.fsPath;
     if (!(await fsExists(globalStoragePath))) {
@@ -29,8 +29,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
     const internalConfigManager = await InternalConfigManager.loadingConfigFrom(internalConfigPath);
     
     if (!internalConfigManager.getConfig().initialized) {
-        const message = "The Kotlin extension will automatically download a language server and a debug adapter to provide code completion, linting, debugging and more. If you prefer to install these yourself, you can provide custom paths or disable them in your settings.";
-        const confirmed = await vscode.window.showInformationMessage(message, "Ok, continue");
+        const message = "The Kotlin extension will automatically download a language server and a debug adapter to provide code completion, linting, debugging and more. If you prefer to install these yourself, you can provide custom paths or disable them in your settings. The language server and debug adapter currently only supports Maven and Gradle projects";
+        const disableButton = "Disable, then continue";
+        const confirmed = await vscode.window.showInformationMessage(message, "Ok, continue", disableButton);
+
+        if(disableButton == confirmed) {
+            await kotlinConfig.update("languageServer.enabled", false, true);
+            await kotlinConfig.update("debugAdapter.enabled", false, true);
+            // these values are not yet updated even if we move the above get-calls down. Works the next time the extension is opened
+            langServerEnabled = false;
+            debugAdapterEnabled = false;
+        }
+        
         if (!confirmed) {
             await vscode.window.showWarningMessage("Only syntax highlighting will be available for Kotlin.");
             return;
