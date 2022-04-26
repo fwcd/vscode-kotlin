@@ -30,10 +30,14 @@ export async function registerDebugAdapter({ context, status, config, javaInstal
     if (isOSUnixoid()) {
         child_process.exec(`chmod +x ${startScriptPath}`);
     }
+
+    let env: any = { ...process.env };
+
+    if (javaInstallation.javaHome) {
+        env['JAVA_HOME'] = javaInstallation.javaHome;
+    }
     
-    vscode.debug.registerDebugAdapterDescriptorFactory("kotlin", new KotlinDebugAdapterDescriptorFactory(startScriptPath, {
-        JAVA_HOME: javaInstallation.javaHome
-    }));
+    vscode.debug.registerDebugAdapterDescriptorFactory("kotlin", new KotlinDebugAdapterDescriptorFactory(startScriptPath, env));
 }
 
 /**
