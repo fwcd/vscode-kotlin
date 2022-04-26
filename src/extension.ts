@@ -50,8 +50,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
     }
 
     const initTasks: Promise<void>[] = [];
+    const javaInstallation = await verifyJavaIsAvailable();
 
-    if (!(await verifyJavaIsAvailable())) {
+    if (!javaInstallation) {
         return;
     }
 

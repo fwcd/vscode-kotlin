@@ -5,40 +5,46 @@ import { correctBinname } from './util/osUtils';
 import { fsExists } from "./util/fsUtils";
 import { LOG } from './util/logger';
 
-export async function verifyJavaIsAvailable(): Promise<boolean> {
-    let javaExecutablePath: string;
+interface JavaInstallation {
+    javaExecutable: string;
+    javaHome?: string;
+}
+
+export async function verifyJavaIsAvailable(): Promise<JavaInstallation | null> {
+    let javaInstallation: JavaInstallation;
 
     try {
-        javaExecutablePath = await findJavaExecutable('java');
+        javaInstallation = await findJavaInstallation();
     } catch (error) {
         console.error(error);
         vscode.window.showErrorMessage(`Could not locate Java: ${error}`)
-        return false;
+        return null;
     }
 
-    if (javaExecutablePath == null) {
+    if (!javaInstallation) {
         vscode.window.showErrorMessage("Couldn't locate java in $JAVA_HOME or $PATH");
-        return false;
+        return null;
     }
 
-    if (javaExecutablePath)
-
-    return true;
+    return javaInstallation;
 }
 
-async function findJavaExecutable(rawBinname: string): Promise<string> {
-    let binname = correctBinname(rawBinname);
+async function findJavaInstallation(): Promise<JavaInstallation> {
+    let binname = correctBinname('java');
 
     // First search java.home setting
-    let userJavaHome = vscode.workspace.getConfiguration('java').get('home') as string;
+    let userJavaHome = vscode.workspace.getConfiguration('kotlin').get('java.home') as string;
 
-    if (userJavaHome != null) {
+    if (userJavaHome) {
         LOG.debug("Looking for Java in java.home (settings): {}", userJavaHome);
 
         let candidate = await findJavaExecutableInJavaHome(userJavaHome, binname);
 
         if (candidate != null)
-            return candidate;
+            return {
+                javaExecutable: candidate,
+                javaHome: userJavaHome
+            };
     }
 
     // Then search each JAVA_HOME
@@ -50,7 +56,10 @@ async function findJavaExecutable(rawBinname: string): Promise<string> {
         let candidate = await findJavaExecutableInJavaHome(envJavaHome, binname);
 
         if (candidate != null)
-            return candidate;
+            return {
+                javaExecutable: candidate,
+                javaHome: envJavaHome
+            };
     }
 
     // Then search PATH parts
@@ -61,14 +70,18 @@ async function findJavaExecutable(rawBinname: string): Promise<string> {
         for (let i = 0; i < pathparts.length; i++) {
             let binpath = path.join(pathparts[i], binname);
             if (fs.existsSync(binpath)) {
-                return binpath;
+                return {
+                    javaExecutable: binpath
+                };
             }
         }
     }
 
     // Else return the binary name directly (this will likely always fail downstream)
     LOG.debug("Could not find Java, will try using binary name directly");
-    return binname;
+    return {
+        javaExecutable: binname
+    };
 }
 
 async function findJavaExecutableInJavaHome(javaHome: string, binname: string): Promise<string> {
