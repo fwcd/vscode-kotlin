@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as child_process from "child_process";
-import { Status } from "./util/status";
 import { ServerDownloader } from "./serverDownloader";
 import { correctScriptName, isOSUnixoid } from "./util/osUtils";
+import { ServerSetupParams } from "./setupParams";
 
-export async function registerDebugAdapter(context: vscode.ExtensionContext, status: Status, config: vscode.WorkspaceConfiguration): Promise<void> {
+export async function registerDebugAdapter({ context, status, config, javaInstallation }: ServerSetupParams): Promise<void> {
     status.update("Registering Kotlin Debug Adapter...");
     
     // Prepare debug adapter

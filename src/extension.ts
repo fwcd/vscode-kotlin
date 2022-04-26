@@ -4,9 +4,10 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { registerDebugAdapter } from './debugSetup';
 import { InternalConfigManager } from './internalConfig';
-import { findJavaInstallation, verifyJavaIsAvailable } from './javaSetup';
+import { findJavaInstallation } from './javaSetup';
 import { activateLanguageServer, configureLanguage } from './languageSetup';
 import { KotlinApi } from './lspExtensions';
+import { ServerSetupParams } from './setupParams';
 import { fsExists } from './util/fsUtils';
 import { LOG } from './util/logger';
 import { Status, StatusBarEntry } from './util/status';
@@ -57,11 +58,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
         return;
     }
 
+    const setupParams: (status: Status) => ServerSetupParams = status => ({
+        context,
+        status,
+        config: kotlinConfig,
+        javaInstallation
+    });
+
     let extensionApi = new ExtensionApi();
     
     if (langServerEnabled) {
         initTasks.push(withSpinningStatus(context, async status => {
-            extensionApi.kotlinApi = await activateLanguageServer(context, status, kotlinConfig);
+            extensionApi.kotlinApi = await activateLanguageServer(setupParams(status));
         }));
     } else {
         LOG.info("Skipping language server activation since 'kotlin.languageServer.enabled' is false");
@@ -69,7 +77,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
     
     if (debugAdapterEnabled) {
         initTasks.push(withSpinningStatus(context, async status => {
-            await registerDebugAdapter(context, status, kotlinConfig);
+            await registerDebugAdapter(setupParams(status));
         }));
     } else {
         LOG.info("Skipping debug adapter registration since 'kotlin.debugAdapter.enabled' is false");

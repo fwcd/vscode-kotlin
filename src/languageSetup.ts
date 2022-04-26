@@ -7,13 +7,13 @@ import { LanguageClient, LanguageClientOptions, RevealOutputChannelOn, ServerOpt
 import { LOG } from './util/logger';
 import { isOSUnixoid, correctScriptName } from './util/osUtils';
 import { ServerDownloader } from './serverDownloader';
-import { Status } from "./util/status";
 import { JarClassContentProvider } from "./jarClassContentProvider";
 import { KotlinApi } from "./lspExtensions";
 import { fsExists } from "./util/fsUtils";
+import { ServerSetupParams } from "./setupParams";
 
 /** Downloads and starts the language server. */
-export async function activateLanguageServer(context: vscode.ExtensionContext, status: Status, config: vscode.WorkspaceConfiguration): Promise<KotlinApi> {
+export async function activateLanguageServer({ context, status, config, javaInstallation }: ServerSetupParams): Promise<KotlinApi> {
     LOG.info('Activating Kotlin Language Server...');
     status.update("Activating Kotlin Language Server...");
     
