@@ -6,6 +6,10 @@ export namespace JarClassContentsRequest {
     export const type = new RequestType<TextDocumentIdentifier, string, void>("kotlin/jarClassContents");
 }
 
+export namespace MainClassRequest {
+    export const type = new RequestType<TextDocumentIdentifier, any, void>("kotlin/mainClass")
+}
+
 export namespace BuildOutputLocationRequest {
     export const type = new RequestType0<string, void>("kotlin/buildOutputLocation");
 }

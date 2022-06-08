@@ -11,6 +11,8 @@ import { JarClassContentProvider } from "./jarClassContentProvider";
 import { KotlinApi } from "./lspExtensions";
 import { fsExists } from "./util/fsUtils";
 import { ServerSetupParams } from "./setupParams";
+import { RunDebugCodeLens } from "./RunDebugCodeLens";
+import { MainClassRequest } from "./lspExtensions";
 
 /** Downloads and starts the language server. */
 export async function activateLanguageServer({ context, status, config, javaInstallation }: ServerSetupParams): Promise<KotlinApi> {
@@ -90,6 +92,40 @@ export async function activateLanguageServer({ context, status, config, javaInst
         languageClientDisposable = languageClient.start();
         context.subscriptions.push(languageClientDisposable);
     }));
+
+    // Activating run/debug code lens if the debug adapter is enabled
+    const kotlinConfig = vscode.workspace.getConfiguration("kotlin");
+    const debugAdapterEnabled = kotlinConfig.get("debugAdapter.enabled");
+    if(debugAdapterEnabled) {
+        vscode.languages.registerCodeLensProvider("kotlin", new RunDebugCodeLens())
+    
+        vscode.commands.registerCommand("kotlin.resolveMain", async(fileUri) => {
+            return await languageClient.sendRequest(MainClassRequest.type, {
+                uri: fileUri
+            })
+        })
+    
+        vscode.commands.registerCommand("kotlin.runMain", async(mainClass, projectRoot) => {
+            vscode.debug.startDebugging(vscode.workspace.getWorkspaceFolder(vscode.Uri.file(projectRoot)), {
+                type: "kotlin",
+                name: "Run Kotlin main",
+                request: "launch",
+                noDebug: true,
+                mainClass,
+                projectRoot,
+            }) 
+        });
+        
+        vscode.commands.registerCommand("kotlin.debugMain", async(mainClass, projectRoot) => {
+            vscode.debug.startDebugging(vscode.workspace.getWorkspaceFolder(vscode.Uri.file(projectRoot)), {
+                type: "kotlin",
+                name: "Debug Kotlin main",
+                request: "launch",
+                mainClass,
+                projectRoot,
+            }) 
+        });
+    }
 
     await languageClient.onReady();
 
