@@ -1,11 +1,10 @@
 import * as vscode from 'vscode';
 
-
 export class RunDebugCodeLens implements vscode.CodeLensProvider {
     async provideCodeLenses(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.CodeLens[]> {
-        const mainInfo = await vscode.commands.executeCommand("kotlin.resolveMain", document.uri.toString()) as MainInfo
+        const mainInfo = await vscode.commands.executeCommand("kotlin.resolveMain", document.uri.toString()) as MainInfo;
 
-        if(mainInfo && mainInfo.mainClass) {
+        if (mainInfo && mainInfo.mainClass) {
             return [
                 new vscode.CodeLens(
                     mainInfo.range,
@@ -23,10 +22,10 @@ export class RunDebugCodeLens implements vscode.CodeLensProvider {
                         arguments: [mainInfo.mainClass, mainInfo.projectRoot]
                     }
                 )
-            ]
+            ];
         }
         
-        return []
+        return [];
     }
 }
 

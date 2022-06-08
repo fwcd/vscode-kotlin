@@ -11,7 +11,7 @@ import { JarClassContentProvider } from "./jarClassContentProvider";
 import { KotlinApi } from "./lspExtensions";
 import { fsExists } from "./util/fsUtils";
 import { ServerSetupParams } from "./setupParams";
-import { RunDebugCodeLens } from "./RunDebugCodeLens";
+import { RunDebugCodeLens } from "./runDebugCodeLens";
 import { MainClassRequest } from "./lspExtensions";
 
 /** Downloads and starts the language server. */
