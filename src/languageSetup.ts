@@ -94,9 +94,8 @@ export async function activateLanguageServer({ context, status, config, javaInst
     }));
 
     // Activating run/debug code lens if the debug adapter is enabled
-    const kotlinConfig = vscode.workspace.getConfiguration("kotlin");
-    const debugAdapterEnabled = kotlinConfig.get("debugAdapter.enabled");
-    if(debugAdapterEnabled) {
+    const debugAdapterEnabled = config.get("debugAdapter.enabled");
+    if (debugAdapterEnabled) {
         vscode.languages.registerCodeLensProvider("kotlin", new RunDebugCodeLens())
     
         vscode.commands.registerCommand("kotlin.resolveMain", async(fileUri) => {
