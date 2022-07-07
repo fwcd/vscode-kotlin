@@ -75,23 +75,11 @@ export async function activateLanguageServer({ context, status, config, javaInst
     const languageClient = createLanguageClient(options);
 
     // Create the language client and start the client.
-    let languageClientDisposable = languageClient.start();
-    context.subscriptions.push(languageClientDisposable);
+    let languageClientPromise = languageClient.start();
     
     // Register a content provider for the 'kls' scheme
     const contentProvider = new JarClassContentProvider(languageClient);
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider("kls", contentProvider));
-    context.subscriptions.push(vscode.commands.registerCommand("kotlin.languageServer.restart", async () => {
-        await languageClient.stop();
-        languageClientDisposable.dispose();
-
-        outputChannel.appendLine("");
-        outputChannel.appendLine(" === Language Server Restart ===")
-        outputChannel.appendLine("");
-
-        languageClientDisposable = languageClient.start();
-        context.subscriptions.push(languageClientDisposable);
-    }));
 
     // Activating run/debug code lens if the debug adapter is enabled
     const debugAdapterEnabled = config.get("debugAdapter.enabled");
@@ -126,7 +114,7 @@ export async function activateLanguageServer({ context, status, config, javaInst
         });
     }
 
-    await languageClient.onReady();
+    await languageClientPromise;
 
     return new KotlinApi(languageClient);
 }

@@ -340,6 +340,6 @@
         "semver": "^7.3.5",
         "vscode-debugadapter": "^1.47.0",
         "vscode-debugprotocol": "^1.47.0",
-        "vscode-languageclient": "^7.0.0"
+        "vscode-languageclient": "^8.0.1"
     }
 }
