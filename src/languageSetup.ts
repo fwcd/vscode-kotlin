@@ -12,7 +12,7 @@ import { KotlinApi } from "./lspExtensions";
 import { fsExists } from "./util/fsUtils";
 import { ServerSetupParams } from "./setupParams";
 import { RunDebugCodeLens } from "./runDebugCodeLens";
-import { MainClassRequest } from "./lspExtensions";
+import { MainClassRequest, OverrideMemberRequest } from "./lspExtensions";
 
 /** Downloads and starts the language server. */
 export async function activateLanguageServer({ context, status, config, javaInstallation }: ServerSetupParams): Promise<KotlinApi> {
@@ -81,6 +81,37 @@ export async function activateLanguageServer({ context, status, config, javaInst
     const contentProvider = new JarClassContentProvider(languageClient);
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider("kls", contentProvider));
 
+    // register override members command
+    vscode.commands.registerCommand("kotlin.overrideMember", async() => {
+        const activeEditor = vscode.window.activeTextEditor;
+        const currentDocument = activeEditor?.document;
+        const overrideOptions = await languageClient.sendRequest(OverrideMemberRequest.type, {
+            textDocument: {
+                uri: currentDocument.uri.toString()
+            },
+            position: activeEditor?.selection.start
+        });
+
+        // show an error message if nothing is found
+        if(0 == overrideOptions.length) {
+            vscode.window.showWarningMessage("No overrides found for class");
+            return;
+        }
+
+        const selected = await vscode.window.showQuickPick(overrideOptions.map(elem => ({
+            label: elem.title,
+            data: elem.edit
+        })), {
+            canPickMany: true,
+            placeHolder: 'Select overrides'
+        });
+
+        selected.forEach(async elem => {
+            // TODO: why the fuck is this not executing?
+            await vscode.workspace.applyEdit(elem.data);
+        });
+    });
+
     // Activating run/debug code lens if the debug adapter is enabled
     // and we are using 'kotlin-language-server' (other language servers
     // might not support the non-standard 'kotlin/mainClass' request)
@@ -93,7 +124,7 @@ export async function activateLanguageServer({ context, status, config, javaInst
             return await languageClient.sendRequest(MainClassRequest.type, {
                 uri: fileUri
             })
-        })
+        });
     
         vscode.commands.registerCommand("kotlin.runMain", async(mainClass, projectRoot) => {
             vscode.debug.startDebugging(vscode.workspace.getWorkspaceFolder(vscode.Uri.file(projectRoot)), {
