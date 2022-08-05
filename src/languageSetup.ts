@@ -85,6 +85,7 @@ export async function activateLanguageServer({ context, status, config, javaInst
     vscode.commands.registerCommand("kotlin.overrideMember", async() => {
         const activeEditor = vscode.window.activeTextEditor;
         const currentDocument = activeEditor?.document;
+        // TODO: seems like we cant interact with the inner edit-fields as if it were a WorkspaceEdit object?? See if there is a way to solve this
         const overrideOptions = await languageClient.sendRequest(OverrideMemberRequest.type, {
             textDocument: {
                 uri: currentDocument.uri.toString()
@@ -97,18 +98,22 @@ export async function activateLanguageServer({ context, status, config, javaInst
             vscode.window.showWarningMessage("No overrides found for class");
             return;
         }
-
+        
         const selected = await vscode.window.showQuickPick(overrideOptions.map(elem => ({
             label: elem.title,
-            data: elem.edit
+            data: elem.edit.changes[currentDocument.uri.toString()]
         })), {
             canPickMany: true,
             placeHolder: 'Select overrides'
         });
 
-        selected.forEach(async elem => {
-            // TODO: why the fuck is this not executing?
-            await vscode.workspace.applyEdit(elem.data);
+        // TODO: find out why we can't use vscode.workspace.applyEdit directly with the results. Probably related to the issue mentioned above
+        // we know all the edits are in the current document, and that each one only contain one edit, so this hack works
+        activeEditor.edit(editBuilder => {
+            selected.forEach(elem => {
+                const textEdit = elem.data[0];
+                editBuilder.insert(textEdit.range.start, textEdit.newText);
+            });
         });
     });
 

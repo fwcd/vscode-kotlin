@@ -1,4 +1,3 @@
-import { CodeAction } from "vscode";
 import { RequestType0, RequestType } from "vscode-jsonrpc";
 import { TextDocumentIdentifier, TextDocumentPositionParams } from "vscode-languageclient";
 import { LanguageClient } from "vscode-languageclient/node";
@@ -12,7 +11,7 @@ export namespace MainClassRequest {
 }
 
 export namespace OverrideMemberRequest {
-    export const type = new RequestType<TextDocumentPositionParams, CodeAction[], void>("kotlin/overrideMember");
+    export const type = new RequestType<TextDocumentPositionParams, any[], void>("kotlin/overrideMember");
 }
 
 export namespace BuildOutputLocationRequest {
