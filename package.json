@@ -71,6 +71,15 @@
                 "category": "Kotlin"
             }
         ],
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "kotlin.overrideMember",
+                    "group": "Kotlin",
+                    "when": "editorTextFocus && editorLangId == kotlin"
+                }
+            ]
+        },
         "breakpoints": [
             {
                 "language": "kotlin"
