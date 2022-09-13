@@ -12,7 +12,7 @@ import { KotlinApi } from "./lspExtensions";
 import { fsExists } from "./util/fsUtils";
 import { ServerSetupParams } from "./setupParams";
 import { RunDebugCodeLens } from "./runDebugCodeLens";
-import { MainClassRequest } from "./lspExtensions";
+import { MainClassRequest, OverrideMemberRequest } from "./lspExtensions";
 
 /** Downloads and starts the language server. */
 export async function activateLanguageServer({ context, status, config, javaInstallation }: ServerSetupParams): Promise<KotlinApi> {
@@ -81,6 +81,42 @@ export async function activateLanguageServer({ context, status, config, javaInst
     const contentProvider = new JarClassContentProvider(languageClient);
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider("kls", contentProvider));
 
+    // register override members command
+    vscode.commands.registerCommand("kotlin.overrideMember", async() => {
+        const activeEditor = vscode.window.activeTextEditor;
+        const currentDocument = activeEditor?.document;
+        // TODO: seems like we cant interact with the inner edit-fields as if it were a WorkspaceEdit object?? See if there is a way to solve this
+        const overrideOptions = await languageClient.sendRequest(OverrideMemberRequest.type, {
+            textDocument: {
+                uri: currentDocument.uri.toString()
+            },
+            position: activeEditor?.selection.start
+        });
+
+        // show an error message if nothing is found
+        if(0 == overrideOptions.length) {
+            vscode.window.showWarningMessage("No overrides found for class");
+            return;
+        }
+        
+        const selected = await vscode.window.showQuickPick(overrideOptions.map(elem => ({
+            label: elem.title,
+            data: elem.edit.changes[currentDocument.uri.toString()]
+        })), {
+            canPickMany: true,
+            placeHolder: 'Select overrides'
+        });
+
+        // TODO: find out why we can't use vscode.workspace.applyEdit directly with the results. Probably related to the issue mentioned above
+        // we know all the edits are in the current document, and that each one only contain one edit, so this hack works
+        activeEditor.edit(editBuilder => {
+            selected.forEach(elem => {
+                const textEdit = elem.data[0];
+                editBuilder.insert(textEdit.range.start, textEdit.newText);
+            });
+        });
+    });
+
     // Activating run/debug code lens if the debug adapter is enabled
     // and we are using 'kotlin-language-server' (other language servers
     // might not support the non-standard 'kotlin/mainClass' request)
@@ -93,7 +129,7 @@ export async function activateLanguageServer({ context, status, config, javaInst
             return await languageClient.sendRequest(MainClassRequest.type, {
                 uri: fileUri
             })
-        })
+        });
     
         vscode.commands.registerCommand("kotlin.runMain", async(mainClass, projectRoot) => {
             vscode.debug.startDebugging(vscode.workspace.getWorkspaceFolder(vscode.Uri.file(projectRoot)), {

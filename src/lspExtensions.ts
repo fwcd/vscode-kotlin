@@ -1,5 +1,5 @@
 import { RequestType0, RequestType } from "vscode-jsonrpc";
-import { TextDocumentIdentifier } from "vscode-languageclient";
+import { TextDocumentIdentifier, TextDocumentPositionParams } from "vscode-languageclient";
 import { LanguageClient } from "vscode-languageclient/node";
 
 export namespace JarClassContentsRequest {
@@ -7,7 +7,11 @@ export namespace JarClassContentsRequest {
 }
 
 export namespace MainClassRequest {
-    export const type = new RequestType<TextDocumentIdentifier, any, void>("kotlin/mainClass")
+    export const type = new RequestType<TextDocumentIdentifier, any, void>("kotlin/mainClass");
+}
+
+export namespace OverrideMemberRequest {
+    export const type = new RequestType<TextDocumentPositionParams, any[], void>("kotlin/overrideMember");
 }
 
 export namespace BuildOutputLocationRequest {

@@ -64,8 +64,22 @@
                 "command": "kotlin.languageServer.restart",
                 "title": "Restart the Language Server",
                 "category": "Kotlin"
+            },
+            {
+                "command": "kotlin.overrideMember",
+                "title": "Override member(s)",
+                "category": "Kotlin"
             }
         ],
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "kotlin.overrideMember",
+                    "group": "Kotlin",
+                    "when": "editorTextFocus && editorLangId == kotlin"
+                }
+            ]
+        },
         "breakpoints": [
             {
                 "language": "kotlin"
