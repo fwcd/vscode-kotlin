@@ -13,4 +13,4 @@ Every time you want to run the extension with the language server:
 Your can attach the running language server on `localhost:8000`. Note that this can be done using the `Attach Kotlin Language Server` launch configuration in VSCode (requires the [Java Debug Extension](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-debug)).
 
 ## Packaging
-Run `npm run packageextension` from the repository's top-level-directory. The extension will then be located under the name `kotlin-[version].vsix`.
+Run `npm run package-extension` from the repository's top-level-directory. The extension will then be located under the name `kotlin-[version].vsix`.
