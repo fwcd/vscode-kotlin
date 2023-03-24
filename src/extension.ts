@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { registerDebugAdapter } from './debugSetup';
 import { InternalConfigManager } from './internalConfig';
-import { findJavaInstallation } from './javaSetup';
+import { findJavaInstallation, findJavaOpts } from './javaSetup';
 import { activateLanguageServer, configureLanguage } from './languageSetup';
 import { KotlinApi } from './lspExtensions';
 import { ServerSetupParams } from './setupParams';
@@ -58,11 +58,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
         return;
     }
 
+    const javaOpts = await findJavaOpts();
     const setupParams: (status: Status) => ServerSetupParams = status => ({
         context,
         status,
         config: kotlinConfig,
-        javaInstallation
+        javaInstallation,
+        javaOpts
     });
 
     let extensionApi = new ExtensionApi();

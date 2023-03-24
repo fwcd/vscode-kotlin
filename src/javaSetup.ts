@@ -77,3 +77,21 @@ async function findJavaExecutableInJavaHome(javaHome: string, binname: string): 
     
     return null;
 }
+
+export async function findJavaOpts(): Promise<string> {
+    let userJavaOpts = vscode.workspace.getConfiguration('kotlin').get('java.opts') as string;
+
+    if (userJavaOpts) {
+        LOG.debug("Using user settings JAVA_OPTS value");
+        return userJavaOpts;
+    }
+
+    let envJavaOpts = process.env["JAVA_OPTS"];
+
+    if (envJavaOpts) {
+        LOG.debug("Using environment variable JAVA_OPTS");
+        return envJavaOpts;
+    }
+
+    return "";
+}

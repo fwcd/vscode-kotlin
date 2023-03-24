@@ -218,6 +218,11 @@
                     "default": "",
                     "description": "A custom JAVA_HOME for the language server and debug adapter to use."
                 },
+                "kotlin.java.opts": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Custom options using JAVA_OPTS for the language server and debug adapter."
+                },
                 "kotlin.languageServer.enabled": {
                     "type": "boolean",
                     "default": true,

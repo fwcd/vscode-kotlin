@@ -15,7 +15,7 @@ import { RunDebugCodeLens } from "./runDebugCodeLens";
 import { MainClassRequest, OverrideMemberRequest } from "./lspExtensions";
 
 /** Downloads and starts the language server. */
-export async function activateLanguageServer({ context, status, config, javaInstallation }: ServerSetupParams): Promise<KotlinApi> {
+export async function activateLanguageServer({ context, status, config, javaInstallation, javaOpts }: ServerSetupParams): Promise<KotlinApi> {
     LOG.info('Activating Kotlin Language Server...');
     status.update("Activating Kotlin Language Server...");
     
@@ -44,6 +44,10 @@ export async function activateLanguageServer({ context, status, config, javaInst
 
     if (javaInstallation.javaHome) {
         env['JAVA_HOME'] = javaInstallation.javaHome;
+    }
+
+    if (javaOpts) {
+        env['JAVA_OPTS'] = javaOpts;
     }
 
     if (transportLayer == "tcp") {
