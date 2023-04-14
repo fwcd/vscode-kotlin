@@ -24,7 +24,6 @@
     ],
     "activationEvents": [
         "onLanguage:kotlin",
-        "onDebugInitialConfigurations",
         "onDebugResolve:kotlin"
     ],
     "main": "./dist/extension",
