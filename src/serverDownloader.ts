@@ -1,5 +1,4 @@
 import extractZip from "extract-zip";
-import { rimraf } from "rimraf";
 import * as path from "path";
 import * as semver from "semver";
 import * as requestPromise from "request-promise-native";
@@ -65,7 +64,7 @@ export class ServerDownloader {
         });
         
         status.update(`Unpacking ${this.displayName} ${version}...`);
-        await rimraf(path.join(this.installDir, this.extractedName));
+        await fs.promises.rmdir(path.join(this.installDir, this.extractedName), { recursive: true });
         await extractZip(downloadDest, { dir: this.installDir });
         await fs.promises.unlink(downloadDest);
         
