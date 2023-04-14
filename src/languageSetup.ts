@@ -24,7 +24,7 @@ export async function activateLanguageServer({ context, status, config, javaInst
     const customPath: string = config.get("languageServer.path");
     
     if (!customPath) {
-        const langServerDownloader = new ServerDownloader("Kotlin Language Server", "kotlin-language-server", "server.zip", langServerInstallDir);
+        const langServerDownloader = new ServerDownloader("Kotlin Language Server", "kotlin-language-server", "server.zip", "server", langServerInstallDir);
         
         try {
             await langServerDownloader.downloadServerIfNeeded(status);

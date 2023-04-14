@@ -1,4 +1,5 @@
 import extractZip from "extract-zip";
+import { rimraf } from "rimraf";
 import * as path from "path";
 import * as semver from "semver";
 import * as requestPromise from "request-promise-native";
@@ -20,17 +21,13 @@ export interface ServerInfo {
  * updates if necessary.
  */
 export class ServerDownloader {
-    private displayName: string;
-    private githubProjectName: string;
-    private assetName: string;
-    private installDir: string;
-    
-    constructor(displayName: string, githubProjectName: string, assetName: string, installDir: string) {
-        this.displayName = displayName;
-        this.githubProjectName = githubProjectName;
-        this.installDir = installDir;
-        this.assetName = assetName;
-    }
+    constructor(
+        private readonly displayName: string,
+        private readonly githubProjectName: string,
+        private readonly assetName: string,
+        private readonly extractedName: string,
+        private readonly installDir: string,
+    ) {}
     
     private async latestReleaseInfo(): Promise<GitHubReleasesAPIResponse> {
         const rawJson = await requestPromise.get(`https://api.github.com/repos/fwcd/${this.githubProjectName}/releases/latest`, {
@@ -68,6 +65,7 @@ export class ServerDownloader {
         });
         
         status.update(`Unpacking ${this.displayName} ${version}...`);
+        await rimraf(path.join(this.installDir, this.extractedName));
         await extractZip(downloadDest, { dir: this.installDir });
         await fs.promises.unlink(downloadDest);
         

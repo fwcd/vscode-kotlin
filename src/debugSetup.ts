@@ -13,7 +13,7 @@ export async function registerDebugAdapter({ context, status, config, javaInstal
     const customPath: string = config.get("debugAdapter.path");
     
     if (!customPath) {
-        const debugAdapterDownloader = new ServerDownloader("Kotlin Debug Adapter", "kotlin-debug-adapter", "adapter.zip", debugAdapterInstallDir);
+        const debugAdapterDownloader = new ServerDownloader("Kotlin Debug Adapter", "kotlin-debug-adapter", "adapter.zip", "adapter", debugAdapterInstallDir);
         
         try {
             await debugAdapterDownloader.downloadServerIfNeeded(status);
