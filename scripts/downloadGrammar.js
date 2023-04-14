@@ -9,7 +9,7 @@ const fs = require("fs");
 const GRAMMAR_URL = "https://github.com/fwcd/kotlin-language-server/releases/latest/download/grammars.zip";
 const RESOURCES_PATH = path.join(__dirname, "..", "resources");
 const DOWNLOAD_PATH = path.join(RESOURCES_PATH, "grammarsDownload.zip");
-const EXTRACT_PATH = path.join(RESOURCES_PATH, "syntaxes");
+const EXTRACT_PATH = path.join(RESOURCES_PATH);
 
 console.log("Downloading grammars...");
 request.get(GRAMMAR_URL)

@@ -38,18 +38,18 @@
                     ".kt",
                     ".kts"
                 ],
-                "configuration": "./resources/syntaxes/kotlin.configuration.json"
+                "configuration": "./resources/grammars/kotlin.configuration.json"
             }
         ],
         "grammars": [
             {
                 "language": "kotlin",
                 "scopeName": "source.kotlin",
-                "path": "./resources/syntaxes/Kotlin.tmLanguage.json"
+                "path": "./resources/grammars/Kotlin.tmLanguage.json"
             },
             {
                 "scopeName": "markdown.kotlin.codeblock",
-                "path": "./resources/syntaxes/codeblock.json",
+                "path": "./resources/grammars/codeblock.json",
                 "injectTo": [
                     "text.html.markdown"
                 ],
