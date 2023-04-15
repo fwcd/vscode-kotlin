@@ -64,7 +64,10 @@ export class ServerDownloader {
         });
         
         status.update(`Unpacking ${this.displayName} ${version}...`);
-        await fs.promises.rmdir(path.join(this.installDir, this.extractedName), { recursive: true });
+        const extractedDir = path.join(this.installDir, this.extractedName);
+        if (await fsExists(extractedDir)) {
+            await fs.promises.rmdir(extractedDir, { recursive: true });
+        }
         await extractZip(downloadDest, { dir: this.installDir });
         await fs.promises.unlink(downloadDest);
         
