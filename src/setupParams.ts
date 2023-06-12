@@ -7,4 +7,5 @@ export interface ServerSetupParams {
     status: Status;
     config: vscode.WorkspaceConfiguration;
     javaInstallation: JavaInstallation;
+    javaOpts: string;
 }

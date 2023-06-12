@@ -5,7 +5,7 @@ import { ServerDownloader } from "./serverDownloader";
 import { correctScriptName, isOSUnixoid } from "./util/osUtils";
 import { ServerSetupParams } from "./setupParams";
 
-export async function registerDebugAdapter({ context, status, config, javaInstallation }: ServerSetupParams): Promise<void> {
+export async function registerDebugAdapter({ context, status, config, javaInstallation, javaOpts }: ServerSetupParams): Promise<void> {
     status.update("Registering Kotlin Debug Adapter...");
     
     // Prepare debug adapter
@@ -35,6 +35,10 @@ export async function registerDebugAdapter({ context, status, config, javaInstal
 
     if (javaInstallation.javaHome) {
         env['JAVA_HOME'] = javaInstallation.javaHome;
+    }
+
+    if (javaOpts) {
+        env['JAVA_OPTS'] = javaOpts;
     }
     
     vscode.debug.registerDebugAdapterDescriptorFactory("kotlin", new KotlinDebugAdapterDescriptorFactory(startScriptPath, env));
