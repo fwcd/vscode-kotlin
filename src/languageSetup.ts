@@ -75,7 +75,17 @@ export async function activateLanguageServer({ context, status, config, javaInst
         await fs.promises.mkdir(storagePath);
     }
 
-    const options = { outputChannel, startScriptPath, tcpPort, env, storagePath };
+    const customFileEventsGlobPatterns: string[] = config.get("languageServer.watchFiles")
+    const fileEventsGlobPatterns = customFileEventsGlobPatterns || [
+        "**/*.kt",
+        "**/*.kts",
+        "**/*.java",
+        "**/pom.xml",
+        "**/build.gradle",
+        "**/settings.gradle"
+    ];
+
+    const options = { outputChannel, startScriptPath, tcpPort, env, storagePath, fileEventsGlobPatterns };
     const languageClient = createLanguageClient(options);
 
     // Create the language client and start the client.
@@ -167,7 +177,8 @@ function createLanguageClient(options: {
     startScriptPath: string,
     tcpPort?: number,
     env?: any,
-    storagePath: string
+    storagePath: string,
+    fileEventsGlobPatterns: string[]
 }): LanguageClient {
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
@@ -182,14 +193,11 @@ function createLanguageClient(options: {
             configurationSection: 'kotlin',
             // Notify the server about file changes to 'javaconfig.json' files contain in the workspace
             // TODO this should be registered from the language server side
-            fileEvents: [
-                vscode.workspace.createFileSystemWatcher('**/*.kt'),
-                vscode.workspace.createFileSystemWatcher('**/*.kts'),
-                vscode.workspace.createFileSystemWatcher('**/*.java'),
-                vscode.workspace.createFileSystemWatcher('**/pom.xml'),
-                vscode.workspace.createFileSystemWatcher('**/build.gradle'),
-                vscode.workspace.createFileSystemWatcher('**/settings.gradle')
-            ]
+            fileEvents: options.fileEventsGlobPatterns.map(
+                function (globPattern: string): vscode.FileSystemWatcher {
+                    return vscode.workspace.createFileSystemWatcher(globPattern)
+                }
+            )
         },
         progressOnInitialization: true,
         outputChannel: options.outputChannel,
