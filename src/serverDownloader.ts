@@ -73,6 +73,36 @@ export class ServerDownloader {
         
         status.update(`Initializing ${this.displayName}...`);
     }
+
+    /**
+     * Checks if there are any duplicate libraries caused by an invalid language
+     * server update by an older version of the extension, that would require
+     * the server to be reinstalled.
+     * 
+     * See https://github.com/fwcd/vscode-kotlin/issues/119#issuecomment-1567203029.
+     */
+    private async checkIfInstallationIsCorrupt(): Promise<string | null> {
+        if (!(await fsExists(this.installDir))) {
+            // A missing installation is not corrupt, it's just missing
+            return null;
+        }
+
+        const libDir = path.join(this.installDir, this.extractedName, "lib");
+        if (!(await fsExists(libDir))) {
+            return `Missing library directory ${libDir}`;
+        }
+
+        const foundLibPrefixes = new Set<string>();
+        for (const lib of await fs.promises.readdir(libDir)) {
+            const libPrefix = lib.split("-").slice(0, -1).join("-");
+            if (foundLibPrefixes.has(libPrefix)) {
+                return `The library '${libPrefix}' is installed twice, this would cause clashes at runtime`;
+            }
+            foundLibPrefixes.add(libPrefix);
+        }
+
+        return null;
+    }
     
     async downloadServerIfNeeded(status: Status): Promise<void> {
         const serverInfo = await this.installedServerInfo();
@@ -104,8 +134,13 @@ export class ServerDownloader {
             const installedVersion = serverInfoOrDefault.version;
             const serverNeedsUpdate = semver.gt(latestVersion, installedVersion);
             let newVersion = installedVersion;
+
+            const installationCorruptReason = await this.checkIfInstallationIsCorrupt();
+            if (installationCorruptReason) {
+                LOG.warn(`The ${this.displayName} installation is corrupt (${installationCorruptReason}), the server will be reinstalled...`);
+            }
             
-            if (serverNeedsUpdate) {
+            if (serverNeedsUpdate || installationCorruptReason) {
                 const serverAsset = releaseInfo.assets.find(asset => asset.name === this.assetName);
                 if (serverAsset) {
                     const downloadUrl = serverAsset.browser_download_url;
