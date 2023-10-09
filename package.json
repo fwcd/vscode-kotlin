@@ -60,11 +60,6 @@
         ],
         "commands": [
             {
-                "command": "kotlin.languageServer.restart",
-                "title": "Restart the Language Server",
-                "category": "Kotlin"
-            },
-            {
                 "command": "kotlin.overrideMember",
                 "title": "Override member(s)",
                 "category": "Kotlin"
