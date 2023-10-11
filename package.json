@@ -325,7 +325,6 @@
     "scripts": {
         "compile": "tsc -p ./",
         "watch": "webpack --mode development -w",
-        "prepare": "node ./scripts/downloadGrammar.js",
         "vscode:prepublish": "webpack --mode production",
         "package-extension": "vsce package",
         "publish-extension": "vsce publish"

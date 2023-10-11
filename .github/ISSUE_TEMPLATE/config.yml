@@ -1,6 +1,6 @@
 blank_issues_enabled: true
 contact_links:
-  - name: "🚨 IMPORTANT: Is it related to code completion, error highlighting, Gradle/Maven or syntax highlighting?"
+  - name: "🚨 IMPORTANT: Is it related to code completion, error highlighting or Gradle/Maven?"
     url: https://github.com/fwcd/kotlin-language-server/issues
     about: "Please file the issue here instead: https://github.com/fwcd/kotlin-language-server/issues"
   - name: "🚨 IMPORTANT: Is it related to debugging?"
