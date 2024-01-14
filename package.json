@@ -272,9 +272,26 @@
                     "default": "default",
                     "description": "Specifies the JVM target, e.g. \"1.6\" or \"1.8\""
                 },
+                "kotlin.diagnostics.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether diagnostics (e.g. errors or warnings from the Kotlin compiler) should be emitted."
+                },
+                "kotlin.diagnostics.level": {
+                    "type": "string",
+                    "default": "hint",
+                    "enum": ["error", "warning", "information", "hint"],
+                    "description": "The minimum severity of diagnostics to emit."
+                },
+                "kotlin.diagnostics.debounceTime": {
+                    "type": "integer",
+                    "default": 250,
+                    "description": "[DEBUG] Specifies the debounce time limit. Lower to increase responsiveness at the cost of possible stability issues."
+                },
                 "kotlin.linting.debounceTime": {
                     "type": "integer",
                     "default": 250,
+                    "deprecationMessage": "The option has been renamed to `kotlin.diagnostics.debounceTime`",
                     "description": "[DEBUG] Specifies the debounce time limit. Lower to increase responsiveness at the cost of possible stability issues."
                 },
                 "kotlin.indexing.enabled": {
