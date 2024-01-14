@@ -345,6 +345,21 @@
                     "default": true,
                     "description": "[DEPRECATED] Specifies whether code completion should provide snippets (true) or plain-text items (false).",
                     "deprecationMessage": "Use 'kotlin.completion.snippets.enabled'"
+                },
+                "kotlin.inlayHints.typeHints": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether to provide inlay hints for types on declaration sites or not."
+                },
+                "kotlin.inlayHints.parameterHints": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether to provide inlay hints for parameters on call sites or not."
+                },
+                "kotlin.inlayHints.chainedHints": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether to provide inlay hints on chained function calls or not."
                 }
             }
         }
