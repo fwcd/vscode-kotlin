@@ -294,6 +294,16 @@
                     "deprecationMessage": "The option has been renamed to `kotlin.diagnostics.debounceTime`",
                     "description": "[DEBUG] Specifies the debounce time limit. Lower to increase responsiveness at the cost of possible stability issues."
                 },
+                "kotlin.scripts.enabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether language features are provided for .kts scripts. Experimental and may not work properly."
+                },
+                "kotlin.scripts.buildScriptsEnabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether language features are provided for .gradle.kts scripts. Experimental and may not work properly."
+                },
                 "kotlin.indexing.enabled": {
                     "type": "boolean",
                     "default": true,
