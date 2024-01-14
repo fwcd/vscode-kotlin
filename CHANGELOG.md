@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to the Kotlin extension will be documented here.
 
+## [0.2.33]
+- Add config options for inlay hints, scripts and diagnostics
+
 ## [0.2.27]
 - Clean server before updates
 - Add override members
