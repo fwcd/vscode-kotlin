@@ -7,7 +7,7 @@
         "type": "git",
         "url": "https://github.com/fwcd/vscode-kotlin.git"
     },
-    "version": "0.2.34",
+    "version": "0.2.35",
     "preview": true,
     "publisher": "fwcd",
     "license": "MIT",
