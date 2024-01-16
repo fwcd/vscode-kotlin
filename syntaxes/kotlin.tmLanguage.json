@@ -19,24 +19,25 @@
     ],
     "repository": {
         "import": {
-            "begin": "\\b(import)\\b\\s*([\\w+.]*\\w+)?\\s*",
+            "begin": "\\b(import)\\b\\s*",
             "beginCaptures": {
                 "1": {
                     "name": "storage.type.import.kotlin"
-                },
-                "2": {
-                    "name": "storage.modifier.import.kotlin"
                 }
             },
             "end": ";|$",
             "name": "meta.import.kotlin",
-            "contentName": "entity.name.package.kotlin",
+            "contentName": "storage.modifier.import.kotlin",
             "patterns": [
                 {
                     "include": "#comments"
                 },
                 {
                     "include": "#hard-keywords"
+                },
+                {
+                    "match": "\\.",
+                    "name": "punctuation.separator.kotlin"
                 },
                 {
                     "match": "\\*",
@@ -48,15 +49,19 @@
             "begin": "\\b(package)\\b\\s*",
             "beginCaptures": {
                 "1": {
-                    "name": "storage.type.package.kotlin"
+                    "name": "keyword.other.package.kotlin"
                 }
             },
             "end": ";|$",
             "name": "meta.package.kotlin",
-            "contentName": "entity.name.package.kotlin",
+            "contentName": "storage.modifier.package.kotlin",
             "patterns": [
                 {
                     "include": "#comments"
+                },
+                {
+                    "match": "\\.",
+                    "name": "punctuation.separator.kotlin"
                 }
             ]
         },
