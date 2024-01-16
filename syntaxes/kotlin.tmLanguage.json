@@ -438,34 +438,70 @@
             }
         },
         "variable-declaration": {
-            "match": "\\b(var)\\b\\s*(?<GROUP><([^<>]|\\g<GROUP>)+>)?",
-            "captures": {
-                "1": {
-                    "name": "storage.type.variable.kotlin"
-                },
-                "2": {
-                    "patterns": [
-                        {
-                            "include": "#type-parameter"
+            "begin": "(?=\\b(var)\\b\\s+[A-Za-z_$][\\w$]*\\s*(=|:|$))",
+            "end": "(?=\\=|:|$)",
+            "name": "meta.definition.variable.kotlin",
+            "patterns": [
+                {
+                    "match": "\\b(var)\\b\\s*(?<GROUP><([^<>]|\\g<GROUP>)+>)?",
+                    "captures": {
+                        "1": {
+                            "name": "storage.type.variable.kotlin"
+                        },
+                        "2": {
+                            "patterns": [
+                                {
+                                    "include": "#type-parameter"
+                                }
+                            ]
                         }
-                    ]
+                    }
+                },
+                {
+                    "match": "([A-Za-z$_][\\w$]*)(?=\\s*(\\[\\])*\\s*(=|:|$))",
+                    "captures": {
+                        "1": {
+                            "name": "variable.other.definition.kotlin"
+                        }
+                    }
+                },
+                {
+                    "include": "#code"
                 }
-            }
+            ]
         },
         "constant-declaration": {
-            "match": "\\b(val)\\b\\s*(?<GROUP><([^<>]|\\g<GROUP>)+>)?",
-            "captures": {
-                "1": {
-                    "name": "storage.type.variable.readonly.kotlin"
-                },
-                "2": {
-                    "patterns": [
-                        {
-                            "include": "#type-parameter"
+            "begin": "(?=\\b(val)\\b\\s+[A-Za-z_$][\\w$]*\\s*(=|:|$))",
+            "end": "(?=\\=|:|$)",
+            "name": "meta.definition.variable.readonly.kotlin",
+            "patterns": [
+                {
+                    "match": "\\b(val)\\b\\s*(?<GROUP><([^<>]|\\g<GROUP>)+>)?",
+                    "captures": {
+                        "1": {
+                            "name": "storage.type.variable.kotlin"
+                        },
+                        "2": {
+                            "patterns": [
+                                {
+                                    "include": "#type-parameter"
+                                }
+                            ]
                         }
-                    ]
+                    }
+                },
+                {
+                    "match": "([A-Za-z$_][\\w$]*)(?=\\s*(\\[\\])*\\s*(=|:|$))",
+                    "captures": {
+                        "1": {
+                            "name": "variable.other.definition.kotlin"
+                        }
+                    }
+                },
+                {
+                    "include": "#code"
                 }
-            }
+            ]
         },
         "object": {
             "match": "\\b(\\w+)(?=\\.)",
