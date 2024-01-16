@@ -267,6 +267,9 @@
                 },
                 {
                     "include": "#control-keywords"
+                },
+                {
+                    "include": "#map-keywords"
                 }
             ]
         },
@@ -410,7 +413,7 @@
             ]
         },
         "parameter-declaration": {
-            "match": "\\b(\\w+)\\s*(:)\\s*(\\w+)(\\?)?",
+            "match": "\\b(\\w+)\\s*(:)\\s*(\\w+)(\\?)?(,)?",
             "captures": {
                 "1": {
                     "name": "variable.parameter.kotlin"
@@ -423,6 +426,9 @@
                 },
                 "4": {
                     "name": "keyword.operator.optional"
+                },
+                "5": {
+                    "name": "punctuation.separator.delimiter.kotlin"
                 }
             }
         },
