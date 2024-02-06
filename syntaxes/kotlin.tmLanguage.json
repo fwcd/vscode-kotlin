@@ -22,7 +22,7 @@
             "begin": "\\b(import)\\b\\s*",
             "beginCaptures": {
                 "1": {
-                    "name": "storage.type.import.kotlin"
+                    "name": "keyword.soft.kotlin"
                 }
             },
             "end": ";|$",
@@ -45,7 +45,7 @@
             "begin": "\\b(package)\\b\\s*",
             "beginCaptures": {
                 "1": {
-                    "name": "storage.type.package.kotlin"
+                    "name": "keyword.hard.package.kotlin"
                 }
             },
             "end": ";|$",
@@ -255,7 +255,7 @@
             "name": "storage.modifier.other.kotlin"
         },
         "soft-keywords": {
-            "match": "\\b(catch|finally|field)\\b",
+            "match": "\\b(init|catch|finally|field)\\b",
             "name": "keyword.soft.kotlin"
         },
         "hard-keywords": {
@@ -306,7 +306,7 @@
             "match": "\\b(class|(?:fun\\s+)?interface)\\s+(\\b\\w+\\b|`[^`]+`)\\s*(?<GROUP><([^<>]|\\g<GROUP>)+>)?",
             "captures": {
                 "1": {
-                    "name": "storage.type.class.kotlin"
+                    "name": "keyword.hard.class.kotlin"
                 },
                 "2": {
                     "name": "entity.name.type.class.kotlin"
@@ -324,7 +324,7 @@
             "match": "\\b(object)(?:\\s+(\\b\\w+\\b|`[^`]+`))?",
             "captures": {
                 "1": {
-                    "name": "storage.type.object.kotlin"
+                    "name": "keyword.hard.object.kotlin"
                 },
                 "2": {
                     "name": "entity.name.type.object.kotlin"
@@ -335,7 +335,7 @@
             "match": "\\b(typealias)\\s+(\\b\\w+\\b|`[^`]+`)\\s*(?<GROUP><([^<>]|\\g<GROUP>)+>)?",
             "captures": {
                 "1": {
-                    "name": "storage.type.alias.kotlin"
+                    "name": "keyword.hard.typealias.kotlin"
                 },
                 "2": {
                     "name": "entity.name.type.kotlin"
@@ -353,7 +353,7 @@
             "match": "\\b(fun)\\b\\s*(?<GROUP><([^<>]|\\g<GROUP>)+>)?\\s*(?:(?:(\\w+)\\.)?(\\b\\w+\\b|`[^`]+`))?",
             "captures": {
                 "1": {
-                    "name": "storage.type.function.kotlin"
+                    "name": "keyword.hard.fun.kotlin"
                 },
                 "2": {
                     "patterns": [
@@ -374,7 +374,7 @@
             "match": "\\b(val|var)\\b\\s*(?<GROUP><([^<>]|\\g<GROUP>)+>)?",
             "captures": {
                 "1": {
-                    "name": "storage.type.variable.kotlin"
+                    "name": "keyword.hard.kotlin"
                 },
                 "2": {
                     "patterns": [
