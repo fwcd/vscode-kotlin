@@ -256,6 +256,18 @@
                     "description": "[DEBUG] If enabled (together with debugAttach.enabled), the language server will not immediately launch but instead listen on the specified attach port and wait for a debugger. This is ONLY useful if you need to debug the language server ITSELF.",
                     "default": false
                 },
+                "kotlin.languageServer.watchFiles": {
+                    "type": "array",
+                    "default": [
+                        "**/*.kt",
+                        "**/*.kts",
+                        "**/*.java",
+                        "**/pom.xml",
+                        "**/build.gradle",
+                        "**/settings.gradle"
+                    ],
+                    "description": "Specifies glob patterns of files, which would be watched by LSP client. The LSP client doesn't support watching files outside a workspace folder."
+                },
                 "kotlin.trace.server": {
                     "type": "string",
                     "enum": [
