@@ -1,5 +1,6 @@
 {
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "$comment": "Test 123",
     "name": "Kotlin",
     "scopeName": "source.kotlin",
     "patterns": [
