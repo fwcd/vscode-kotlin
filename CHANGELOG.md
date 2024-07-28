@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to the Kotlin extension will be documented here.
 
+## [0.2.35]
+- Improve keyword highlighting
+- Add config options for code generation (needed for Java interoperability), which is now opt-in due to a lack of stability on recent Kotlin versions
+
 ## [0.2.34]
 - Improve object/function literal highlighting
 
