@@ -241,6 +241,11 @@
                     "description": "The port to which the client will attempt to connect to. A random port is used if zero. Only used if the transport layer is TCP.",
                     "default": 0
                 },
+                "kotlin.languageServer.codegen.enabled": {
+                    "type": "boolean",
+                    "description": "Whether to enable code generation to a temporary build output directory for Java interoperability (via the non-standard kotlin/buildOutputLocation LSP method). Experimental.",
+                    "default": false
+                },
                 "kotlin.languageServer.debugAttach.enabled": {
                     "type": "boolean",
                     "description": "[DEBUG] Whether the language server should listen for debuggers, i.e. be debuggable while running in VSCode. This is ONLY useful if you need to debug the language server ITSELF.",
