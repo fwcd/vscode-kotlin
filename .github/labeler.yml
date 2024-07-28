@@ -1,0 +1,9 @@
+grammar:
+  - changed-files:
+    - any-glob-to-any-file:
+        - syntaxes/**/*
+
+extension:
+  - changed-files:
+    - any-glob-to-any-file:
+        - src/**/*
