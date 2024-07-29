@@ -1,7 +1,7 @@
 {
     "name": "kotlin",
     "displayName": "Kotlin",
-    "description": "Smart code completion, debugging, linting, syntax highlighting and more for Kotlin",
+    "description": "Code completion, debugging, linting and more",
     "icon": "resources/Icon128.png",
     "repository": {
         "type": "git",
