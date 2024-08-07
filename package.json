@@ -121,6 +121,11 @@
 								"description": "Environment variables in key/value format. (usually { \"FOO\": \"BAR\"})",
 								"default": {}
 							},
+                            "envFile": {
+								"type": "string",
+								"description": "Environment variables file path. (usually .env)",
+								"default": {}
+							},
                             "enableJsonLogging": {
                                 "type": "boolean",
                                 "description": "Enables logging of debug server JSON messages into a file defined by 'jsonLogFile'.",
