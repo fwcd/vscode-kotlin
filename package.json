@@ -124,7 +124,7 @@
                             "envFile": {
 								"type": "string",
 								"description": "Environment variables file path. (usually .env)",
-								"default": {}
+								"default": "${workspaceFolder}/.env"
 							},
                             "enableJsonLogging": {
                                 "type": "boolean",
