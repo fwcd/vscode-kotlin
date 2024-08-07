@@ -105,6 +105,22 @@
                                 "description": "The JVM arguments if needed by your project (usually -Dfoo=bar).",
                                 "default": ""
                             },
+                            "cwd": {
+                                "type": "string",
+                                "description": "The current working directory. Default to the project root.",
+                                "default": "${workspaceFolder}"
+                            },
+                            "envs": {
+								"type": "object",
+								"additionalProperties": {
+									"type": [
+										"string",
+										"null"
+									]
+								},
+								"description": "Environment variables in key/value format. (usually { \"FOO\": \"BAR\"})",
+								"default": {}
+							},
                             "enableJsonLogging": {
                                 "type": "boolean",
                                 "description": "Enables logging of debug server JSON messages into a file defined by 'jsonLogFile'.",
