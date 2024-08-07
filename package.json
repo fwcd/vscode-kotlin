@@ -110,7 +110,7 @@
                                 "description": "The current working directory. Default to the project root.",
                                 "default": "${workspaceFolder}"
                             },
-                            "envs": {
+                            "env": {
 								"type": "object",
 								"additionalProperties": {
 									"type": [
