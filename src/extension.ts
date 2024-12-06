@@ -58,7 +58,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
         return;
     }
 
-    const javaOpts = await findJavaOpts();
+    const initialJavaOpts = await findJavaOpts();
+    const addExportAppendix = "--add-exports jdk.jdi/com.sun.tools.jdi=ALL-UNNAMED"
+    const javaOpts = initialJavaOpts === "" ? addExportAppendix : `${addExportAppendix} ${initialJavaOpts}`;
+
     const setupParams: (status: Status) => ServerSetupParams = status => ({
         context,
         status,
