@@ -222,6 +222,7 @@ function createLanguageClient(options: {
             command: options.startScriptPath,
             args: [],
             options: {
+                shell: true,
                 cwd: vscode.workspace.workspaceFolders?.[0]?.uri?.fsPath,
                 env: options.env
             } // TODO: Support multi-root workspaces (and improve support for when no available is available)
@@ -247,7 +248,7 @@ export function spawnLanguageServerProcessAndConnectViaTcp(options: {
         // Wait for the first client to connect
         server.listen(options.tcpPort, () => {
             const tcpPort = (server.address() as net.AddressInfo).port.toString();
-            const proc = child_process.spawn(options.startScriptPath, ["--tcpClientPort", tcpPort]);
+            const proc = child_process.spawn(options.startScriptPath, ["--tcpClientPort", tcpPort], { shell: true });
             LOG.info("Creating client at {} via TCP port {}", options.startScriptPath, tcpPort);
             
             const outputCallback = data => options.outputChannel.append(`${data}`);
