@@ -29,10 +29,24 @@ export class ServerDownloader {
     ) {}
     
     private async latestReleaseInfo(): Promise<GitHubReleasesAPIResponse> {
-        const rawJson = await requestPromise.get(`https://api.github.com/repos/fwcd/${this.githubProjectName}/releases/latest`, {
-            headers: { "User-Agent": "vscode-kotlin-ide" }
-        });
-        return JSON.parse(rawJson) as GitHubReleasesAPIResponse;
+        const headers: { [key: string]: string } = {
+            "User-Agent": "vscode-kotlin-ide"
+        };
+
+        const token = process.env.GITHUB_TOKEN;
+        if (token) {
+            headers["Authorization"] = `Bearer ${token}`;
+        }
+
+        try {
+            const rawJson = await requestPromise.get(`https://api.github.com/repos/fwcd/${this.githubProjectName}/releases/latest`, { headers });
+            return JSON.parse(rawJson) as GitHubReleasesAPIResponse;
+        } catch (error) {
+            if (error.statusCode === 403 && !token) {
+                LOG.warn("GitHub API rate limit exceeded. Consider setting GITHUB_TOKEN environment variable to increase the rate limit.");
+            }
+            throw error;
+        }
     }
     
     private serverInfoFile(): string {
