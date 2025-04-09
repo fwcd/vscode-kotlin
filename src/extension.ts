@@ -17,6 +17,10 @@ import { Status, StatusBarEntry } from './util/status';
 export async function activate(context: vscode.ExtensionContext): Promise<ExtensionApi> {
     configureLanguage();
 
+    const outputChannel = vscode.window.createOutputChannel("Kotlin");
+    LOG.appendLine = outputChannel.appendLine.bind(outputChannel);
+    context.subscriptions.push(outputChannel);
+
     const kotlinConfig = vscode.workspace.getConfiguration("kotlin");
     let langServerEnabled = kotlinConfig.get("languageServer.enabled");
     let debugAdapterEnabled = kotlinConfig.get("debugAdapter.enabled");
@@ -64,7 +68,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<Extens
         status,
         config: kotlinConfig,
         javaInstallation,
-        javaOpts
+        javaOpts,
+        outputChannel
     });
 
     let extensionApi = new ExtensionApi();

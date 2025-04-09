@@ -8,4 +8,5 @@ export interface ServerSetupParams {
     config: vscode.WorkspaceConfiguration;
     javaInstallation: JavaInstallation;
     javaOpts: string;
+    outputChannel: vscode.OutputChannel;
 }

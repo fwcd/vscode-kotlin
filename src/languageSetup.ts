@@ -1,4 +1,5 @@
 import * as child_process from "child_process";
+import * as util from "util";
 import * as fs from "fs";
 import * as net from "net";
 import * as path from "path";
@@ -15,8 +16,8 @@ import { RunDebugCodeLens } from "./runDebugCodeLens";
 import { MainClassRequest, OverrideMemberRequest } from "./lspExtensions";
 
 /** Downloads and starts the language server. */
-export async function activateLanguageServer({ context, status, config, javaInstallation, javaOpts }: ServerSetupParams): Promise<KotlinApi> {
-    LOG.info('Activating Kotlin Language Server...');
+export async function activateLanguageServer({ context, status, config, javaInstallation, javaOpts, outputChannel }: ServerSetupParams): Promise<KotlinApi> {
+    LOG.info('Activating Kotlin Language Server: {}', util.inspect({ javaInstallation, javaOpts }));
     status.update("Activating Kotlin Language Server...");
     
     // Prepare language server
@@ -35,9 +36,6 @@ export async function activateLanguageServer({ context, status, config, javaInst
         }
     }
 
-    const outputChannel = vscode.window.createOutputChannel("Kotlin");
-    context.subscriptions.push(outputChannel);
-    
     const transportLayer = config.get("languageServer.transport");
     let tcpPort: number = null;
     let env: any = { ...process.env };

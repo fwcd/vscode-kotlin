@@ -10,9 +10,11 @@ export enum LogLevel {
 
 export class Logger {
     level: LogLevel;
+    appendLine: (line: string) => void;
     
-    public constructor(level: LogLevel) {
+    public constructor(level: LogLevel, appendLine: (line: string) => void) {
         this.level = level;
+        this.appendLine = appendLine;
     }
     
     private format(msg: String, placeholders: any[]): string {
@@ -36,7 +38,7 @@ export class Logger {
     
     private log(prefix: String, level: LogLevel, msg: String, placeholders: any[]): void {
         if (level >= this.level) {
-            console.log(prefix + this.format(msg, placeholders));
+            this.appendLine(prefix + this.format(msg, placeholders));
         }
     }
     
@@ -53,4 +55,4 @@ export class Logger {
     public deepTrace(msg: String, ...placeholders: any[]): void { this.log("Extension: [D_TRACE]", LogLevel.DEEP_TRACE, msg, placeholders); }
 }
 
-export const LOG = new Logger(LogLevel.INFO);
+export const LOG = new Logger(LogLevel.DEBUG, console.log);
