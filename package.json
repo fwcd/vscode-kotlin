@@ -63,6 +63,11 @@
                 "command": "kotlin.overrideMember",
                 "title": "Override member(s)",
                 "category": "Kotlin"
+            },
+            {
+                "command": "kotlin.clean.workspace",
+                "title": "Clean Kotlin Language Server workspace",
+                "category": "Kotlin"
             }
         ],
         "menus": {

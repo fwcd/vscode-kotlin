@@ -131,6 +131,24 @@ export async function activateLanguageServer({ context, status, config, javaInst
         });
     });
 
+    vscode.commands.registerCommand("kotlin.clean.workspace", async (force?: boolean) => {
+        if (!force) {
+            const message = 'Are you sure you want to clean the Kotlin language server workspace?';
+            const cancel = 'Cancel';
+            const doIt = 'Reload and delete';
+            const selection = await vscode.window.showWarningMessage(message, cancel, doIt);
+            if (selection !== doIt) { // user cancelled
+                return;
+            }
+        }
+
+        // remove the workspace
+        fs.rmdirSync(storagePath, { recursive: true });
+
+        // reload the window
+        vscode.commands.executeCommand("workbench.action.reloadWindow");
+    });
+
     // Activating run/debug code lens if the debug adapter is enabled
     // and we are using 'kotlin-language-server' (other language servers
     // might not support the non-standard 'kotlin/mainClass' request)
