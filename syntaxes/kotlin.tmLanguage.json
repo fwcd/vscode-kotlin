@@ -126,13 +126,16 @@
                     "include": "#self-reference"
                 },
                 {
-                    "include": "#decimal-literal"
-                },
-                {
                     "include": "#hex-literal"
                 },
                 {
                     "include": "#binary-literal"
+                },
+                {
+                    "include": "#float-literal"
+                },
+                {
+                    "include": "#decimal-literal"
                 },
                 {
                     "include": "#boolean-literal"
@@ -433,7 +436,7 @@
             }
         },
         "key": {
-            "match": "\\b(\\w=)\\s*(=)",
+            "match": "\\b([\\w0-9_]+)\\s*(=)",
             "captures": {
                 "1": {
                     "name": "variable.parameter.kotlin"
@@ -516,17 +519,21 @@
                 }
             ]
         },
-        "decimal-literal": {
-            "match": "\\b\\d[\\d_]*(\\.[\\d_]+)?((e|E)\\d+)?(u|U)?(L|F|f)?\\b",
-            "name": "constant.numeric.decimal.kotlin"
-        },
         "hex-literal": {
-            "match": "0(x|X)[A-Fa-f0-9][A-Fa-f0-9_]*(u|U)?",
+            "match": "0(x|X)[A-Fa-f0-9][A-Fa-f0-9_]*[uU]?L?",
             "name": "constant.numeric.hex.kotlin"
         },
         "binary-literal": {
-            "match": "0(b|B)[01][01_]*",
+            "match": "0(b|B)[01][01_]*[uU]?L?",
             "name": "constant.numeric.binary.kotlin"
+        },
+        "float-literal": {
+            "match": "[0-9][_0-9]*\\.[0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?[fF]?|\\.[0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?[fF]?|[0-9][_0-9]*[eE][+-]?[0-9][_0-9]*[fF]?|[0-9][_0-9]*[fF]",
+            "name": "constant.numeric.float.kotlin"
+        },
+        "decimal-literal": {
+            "match": "[0-9][_0-9]*[uU]?L?",
+            "name": "constant.numeric.decimal.kotlin"
         },
         "boolean-literal": {
             "match": "\\b(true|false)\\b",
