@@ -18,14 +18,14 @@ import { MainClassRequest, OverrideMemberRequest } from "./lspExtensions";
 export async function activateLanguageServer({ context, status, config, javaInstallation, javaOpts }: ServerSetupParams): Promise<KotlinApi> {
     LOG.info('Activating Kotlin Language Server...');
     status.update("Activating Kotlin Language Server...");
-    
+
     // Prepare language server
     const langServerInstallDir = path.join(context.globalStorageUri.fsPath, "langServerInstall");
     const customPath: string = config.get("languageServer.path");
-    
+
     if (!customPath) {
         const langServerDownloader = new ServerDownloader("Kotlin Language Server", "kotlin-language-server", "server.zip", "server", langServerInstallDir);
-        
+
         try {
             await langServerDownloader.downloadServerIfNeeded(status);
         } catch (error) {
@@ -37,7 +37,7 @@ export async function activateLanguageServer({ context, status, config, javaInst
 
     const outputChannel = vscode.window.createOutputChannel("Kotlin");
     context.subscriptions.push(outputChannel);
-    
+
     const transportLayer = config.get("languageServer.transport");
     let tcpPort: number = null;
     let env: any = { ...process.env };
@@ -52,7 +52,7 @@ export async function activateLanguageServer({ context, status, config, javaInst
 
     if (transportLayer == "tcp") {
         tcpPort = config.get("languageServer.port");
-        
+
         LOG.info(`Connecting via TCP, port: ${tcpPort}`);
     } else if (transportLayer == "stdio") {
         LOG.info("Connecting via Stdio.");
@@ -67,7 +67,7 @@ export async function activateLanguageServer({ context, status, config, javaInst
     }
 
     status.dispose();
-    
+
     const startScriptPath = customPath || path.resolve(langServerInstallDir, "server", "bin", correctScriptName("kotlin-language-server"));
 
     const storagePath = context.storageUri.fsPath
@@ -90,13 +90,13 @@ export async function activateLanguageServer({ context, status, config, javaInst
 
     // Create the language client and start the client.
     let languageClientPromise = languageClient.start();
-    
+
     // Register a content provider for the 'kls' scheme
     const contentProvider = new JarClassContentProvider(languageClient);
     context.subscriptions.push(vscode.workspace.registerTextDocumentContentProvider("kls", contentProvider));
 
     // register override members command
-    vscode.commands.registerCommand("kotlin.overrideMember", async() => {
+    vscode.commands.registerCommand("kotlin.overrideMember", async () => {
         const activeEditor = vscode.window.activeTextEditor;
         const currentDocument = activeEditor?.document;
         // TODO: seems like we cant interact with the inner edit-fields as if it were a WorkspaceEdit object?? See if there is a way to solve this
@@ -108,11 +108,11 @@ export async function activateLanguageServer({ context, status, config, javaInst
         });
 
         // show an error message if nothing is found
-        if(0 == overrideOptions.length) {
+        if (0 == overrideOptions.length) {
             vscode.window.showWarningMessage("No overrides found for class");
             return;
         }
-        
+
         const selected = await vscode.window.showQuickPick(overrideOptions.map(elem => ({
             label: elem.title,
             data: elem.edit.changes[currentDocument.uri.toString()]
@@ -131,6 +131,14 @@ export async function activateLanguageServer({ context, status, config, javaInst
         });
     });
 
+    vscode.commands.registerCommand("kotlin.restartLanguageServer", async () => {
+        if (languageClient) {
+            await languageClient.stop();
+            await languageClient.start();
+            vscode.window.showInformationMessage('Kotlin Language Server restarted');
+        }
+    });
+
     // Activating run/debug code lens if the debug adapter is enabled
     // and we are using 'kotlin-language-server' (other language servers
     // might not support the non-standard 'kotlin/mainClass' request)
@@ -138,14 +146,14 @@ export async function activateLanguageServer({ context, status, config, javaInst
     const usesStandardLanguageServer = startScriptPath.endsWith("kotlin-language-server");
     if (debugAdapterEnabled && usesStandardLanguageServer) {
         vscode.languages.registerCodeLensProvider("kotlin", new RunDebugCodeLens())
-    
-        vscode.commands.registerCommand("kotlin.resolveMain", async(fileUri) => {
+
+        vscode.commands.registerCommand("kotlin.resolveMain", async (fileUri) => {
             return await languageClient.sendRequest(MainClassRequest.type, {
                 uri: fileUri
             })
         });
-    
-        vscode.commands.registerCommand("kotlin.runMain", async(mainClass, projectRoot) => {
+
+        vscode.commands.registerCommand("kotlin.runMain", async (mainClass, projectRoot) => {
             vscode.debug.startDebugging(vscode.workspace.getWorkspaceFolder(vscode.Uri.file(projectRoot)), {
                 type: "kotlin",
                 name: "Run Kotlin main",
@@ -153,17 +161,17 @@ export async function activateLanguageServer({ context, status, config, javaInst
                 noDebug: true,
                 mainClass,
                 projectRoot,
-            }) 
+            })
         });
-        
-        vscode.commands.registerCommand("kotlin.debugMain", async(mainClass, projectRoot) => {
+
+        vscode.commands.registerCommand("kotlin.debugMain", async (mainClass, projectRoot) => {
             vscode.debug.startDebugging(vscode.workspace.getWorkspaceFolder(vscode.Uri.file(projectRoot)), {
                 type: "kotlin",
                 name: "Debug Kotlin main",
                 request: "launch",
                 mainClass,
                 projectRoot,
-            }) 
+            })
         });
     }
 
@@ -206,7 +214,7 @@ function createLanguageClient(options: {
             storagePath: options.storagePath
         }
     }
-    
+
     // Ensure that start script can be executed
     if (isOSUnixoid()) {
         child_process.exec(`chmod +x ${options.startScriptPath}`);
@@ -214,7 +222,7 @@ function createLanguageClient(options: {
 
     // Start the child Java process
     let serverOptions: ServerOptions;
-    
+
     if (options.tcpPort) {
         serverOptions = () => spawnLanguageServerProcessAndConnectViaTcp(options);
     } else {
@@ -250,7 +258,7 @@ export function spawnLanguageServerProcessAndConnectViaTcp(options: {
             const tcpPort = (server.address() as net.AddressInfo).port.toString();
             const proc = child_process.spawn(options.startScriptPath, ["--tcpClientPort", tcpPort], { shell: isOSWindows() });
             LOG.info("Creating client at {} via TCP port {}", options.startScriptPath, tcpPort);
-            
+
             const outputCallback = data => options.outputChannel.append(`${data}`);
             proc.stdout.on("data", outputCallback);
             proc.stderr.on("data", outputCallback);
