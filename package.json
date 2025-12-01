@@ -63,6 +63,10 @@
                 "command": "kotlin.overrideMember",
                 "title": "Override member(s)",
                 "category": "Kotlin"
+            },
+            {
+                "command": "kotlin.restartLanguageServer",
+                "title": "Kotlin: Restart Language Server"
             }
         ],
         "menus": {
@@ -297,7 +301,12 @@
                 "kotlin.diagnostics.level": {
                     "type": "string",
                     "default": "hint",
-                    "enum": ["error", "warning", "information", "hint"],
+                    "enum": [
+                        "error",
+                        "warning",
+                        "information",
+                        "hint"
+                    ],
                     "description": "The minimum severity of diagnostics to emit."
                 },
                 "kotlin.diagnostics.debounceTime": {
